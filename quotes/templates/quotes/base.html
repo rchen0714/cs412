@@ -1,0 +1,34 @@
+<!-- quote/template/quote/base.html  -->
+
+{% load static %}
+
+<html>
+
+    <head>
+        <title>Patrick Star Famous Quotes/title>
+        <link rel="stylesheet" href ="{% static 'styles.css' %}">
+    </head>
+    <body>
+
+        <!-- nav links -->
+
+        <nav>
+            <ul>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+        </nav>
+    
+        <!-- specfied page content here  -->
+
+        {% block content %}
+        {% endblock %}
+
+        <footer>
+            <p>&#169 Ruby Chen 2025. All rights reserved</p>
+            </p>Generated at: {{time}}</p>
+        </footer>
+    </body>
+
+</html>
