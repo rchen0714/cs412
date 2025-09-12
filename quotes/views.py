@@ -1,4 +1,6 @@
-# file: quote/views.py
+# File: quotes/views.py
+# Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+# Description: This file contains the views/functions for the quotes app.
 
 from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse
@@ -24,7 +26,8 @@ IMAGES = [
 # Create your views here.
 
 def quote_page(request):
-    '''Respond to the URL 'quotes' and returns a rendered template'''
+    '''Respond to the URL 'quotes' and returns a rendered template with a 
+    random quote and image.'''
 
     template_name = "quotes/quote.html"
 
@@ -37,7 +40,8 @@ def quote_page(request):
     return render(request, template_name, context)
 
 def show_all(request):
-    '''Respond to the URL 'show_all' and returns a rendered template'''
+    '''Respond to the URL 'show_all' and returns a rendered template with
+    all quotes and images.'''
 
     template_name = "quotes/show_all.html"
 
@@ -50,7 +54,8 @@ def show_all(request):
     return render(request, template_name, context)
 
 def about(request): 
-    '''Respond to the URL 'about' and returns a rendered template'''
+    '''Respond to the URL 'about' and returns a rendered template with 
+    basic information about the app.'''
 
     template_name = "quotes/about.html"
 

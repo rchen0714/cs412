@@ -1,3 +1,7 @@
+# File: quotes/urls.py
+# Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+# Description: This file defines the URL patterns for the quotes app.
+
 from django.urls import path
 from django.conf import settings
 from . import views

@@ -1,3 +1,7 @@
+# File: settings.py
+# Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+# Description: Django settings for cs412 project.
+
 """
 Django settings for cs412 project.
 

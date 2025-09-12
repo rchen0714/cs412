@@ -1,3 +1,7 @@
+# File: urls.py
+# Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+# Description: URL configuration for cs412 project.
+
 """
 URL configuration for cs412 project.
 
