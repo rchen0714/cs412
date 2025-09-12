@@ -4,5 +4,24 @@
     
     {% block content %}
 
+        <h1>Patrick Star Quote Generator</h1>
+
+        <!-- random image -->
+
+        <div class="quote_image">
+            <img src="{{ image }}" alt="A pink starfish">
+        </div>
+
+        <!-- random quote -->
+
+        <div id="quote_text">
+            <p id="main_quote">"{{ quote }}"</p>
+            <p><em>- Patrick Star</em></p>
+        </div>
+
+        <div class="button-container">
+            <button onclick="window.location.reload();">New Quote</button>
+        </div>
+
     {% endblock %}
 

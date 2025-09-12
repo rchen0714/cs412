@@ -4,5 +4,28 @@
     
     {% block content %}
 
+        <div class="show_all_section">
+
+            <h1>All Quotes by Patrick Star</h1>
+
+            <div class="all_quotes">
+                <ul>
+                    {% for quote in all_quotes %}
+                        <li>"{{ quote }}"</li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+
+            <h3>Images of Patrick Star</h3>
+            
+            <div class="all_images">
+                {% for image in all_images %}
+                    <img src="{{ image }}" alt="A pink starfish">
+                {% endfor %}
+            </div>
+
+        </div>
+
     {% endblock %}
 

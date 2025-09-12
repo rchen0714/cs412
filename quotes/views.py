@@ -29,6 +29,7 @@ def quote_page(request):
     template_name = "quotes/quote.html"
 
     context = {
+        "time": time.ctime(),
         "quote": random.choice(QUOTES),
         "image": random.choice(IMAGES),
     }
@@ -41,8 +42,9 @@ def show_all(request):
     template_name = "quotes/show_all.html"
 
     context = {
-        "quotes": QUOTES,
-        "images": IMAGES,
+        "time": time.ctime(),
+        "all_quotes": QUOTES,
+        "all_images": IMAGES,
     }
 
     return render(request, template_name, context)
@@ -53,8 +55,7 @@ def about(request):
     template_name = "quotes/about.html"
 
     context = {
-        "quotes": QUOTES,
-        "images": IMAGES,
+        "time": time.ctime(),
     }
 
     return render(request, template_name, context)
