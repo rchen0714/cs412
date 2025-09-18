@@ -1,0 +1,24 @@
+
+{% extends "restaurant/base.html" %}
+
+    {% block content %}
+
+        <div>
+            <h1>Contact Form</h1>
+
+            <form action="{% url 'submit' %}" method="post">
+                {% csrf_token %}
+                Name: <input type="text" name="name">
+                Favorite Color: <input type="text" name="color">
+                <input type="submit">
+            </form>
+        </div>
+
+        <footer>
+            The current time is {{time}}.
+            <br>
+            This page has been brought to you by the letters: 
+            {{letter1}} and {{letter2}} and by the number {{number}}.
+        </footer>
+
+    {% endblock %}
