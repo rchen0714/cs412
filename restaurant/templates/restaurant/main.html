@@ -8,11 +8,13 @@ Description: This is the base template for the quotes app.
 
     {% block content %}
 
-        <div>
+    <div id="wrapper">
+
+        <div id="hero">
             <h1>Welcome to Oasis Sweet Restaurant!</h1>
 
             <p>We are delighted to have you here. Please feel free to explore our menu and an order.</p>
-            <img src="{{ main_image }}" alt="Bingsoo's from Oasis Sweet" height="400">
+            <img src="{{ main_image }}" alt="Bingsoo's from Oasis Sweet" height="500">
         
         </div>
 
@@ -21,26 +23,34 @@ Description: This is the base template for the quotes app.
         <div id="photo_gallery">
 
             {% for image in all_images %}
-                <img src="{{ image }}" alt="A dessert dish from Oasis Sweets" width="400">
+                <img src="{{ image }}" alt="A dessert dish from Oasis Sweets" width="500">
             {% endfor %}
 
         </div>
 
         <div id="location_and_hours">
-            <p><strong>Location: </strong><a href="https://maps.app.goo.gl/GCx4neQHpb1dHapz8"> 1428 Beacon St, Brookline, MA 02446</a></p>
+            <div id="location">
+                <h3>Location</h3>
+                <img src="{{ location_image }}" alt="Oasis Sweet Storefront View" height="300"
+                <p><strong>Location: </strong><a href="https://maps.app.goo.gl/GCx4neQHpb1dHapz8"> 1428 Beacon St, Brookline, MA 02446</a></p>
+            </div>
+            
+            <div id="hours">
+                <h3>Hours of Operation</h3>
 
-            <h3>Hours of Operation</h3>
+                <ul>
+                    <li>Friday: 2-10 PM</li>
+                    <li>Saturday: 1-10 PM</li>
+                    <li>Sunday: 1-10 PM</li>
+                    <li>Monday: 2-10 PM</li>
+                    <li>Tuesday: <em>Closed</em></li>
+                    <li>Wednesday: 2-10 PM</li>
+                    <li>Thursday: 2-10 PM</li>
+                </ul>
+            </div>
 
-            <ul>
-                <li>Friday: 2-10 PM</li>
-                <li>Saturday: 1-10 PM</li>
-                <li>Sunday: 1-10 PM</li>
-                <li>Monday: 2-10 PM</li>
-                <li>Tuesday: <em>Closed</em></li>
-                <li>Wednesday: 2-10 PM</li>
-                <li>Thursday: 2-10 PM</li>
-            </ul>
         </div>
+    </div>
 
 
     {% endblock %}

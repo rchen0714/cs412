@@ -9,44 +9,46 @@ Description: This is the base template for the quotes app.
 
     {% block content %}
 
-        <div id="order_page">
-            <h1>Place an Online Order</h1>
-            <p>Use our online ordering system to place an order for delivery!</p>
+        <div id="wrapper">
+            <div id="hero">
+                <h1>Place an Online Order</h1>
+                <p>Use our online ordering system to place an order for delivery!</p>
+            </div>
 
             <form action="{% url 'confirmation' %}" method="post">
                 {% csrf_token %}
 
-                <h2>Menu</h2>
+                <h3>Menu</h3>
+
+                <p id="daily_special">
+                    <strong>Today's Daily Special</strong>: {{ random_daily.0 }}
+                </p>
 
                 <div id="menu_items">
-
-                    <p id="daily_special">
-                    <strong>Today's Daily Special</strong>: {{ random_daily.0 }}
-                    </p>
-
                     <ul>
                         {% for item, price in all_menu %}
                         <li>
-                            {{ item }} - {{ price }}
-                            <label>
+                            <span>{{ item }} - {{ price }}</span>
+                            <div id="checkbox">
                                 <input type="checkbox" name="cart_items" value="{{ item }}">
                                 Add to order
-                            </label>
+                            </div>
                         </li>
                         {% endfor %}
 
                     </ul>
                 </div>
 
-                <h2>Customer Information</h2>
+                <h3>Customer Information</h3>
                 <div id="cust_input">
-                        Name: <input type="text" name="name">
-                        Email: <input type="text" name="email">
-                        Phone: <input type="text" name="phone">
+                        <p>Name: <input type="text" name="name"></p>
+                        <p>Email: <input type="text" name="email"></p>
+                        <p>Phone: <input type="text" name="phone"></p>
+                        <p><em>Special Instructions:</em> <input type="text" name="instructions"></input></p>
 
-                        <strong>Special Instructions:</strong> <input type="text" name="instructions"></input>
+                        <input type="submit" name="submit_button "value="Submit Order">
                 </div>
-                <input type="submit" name="submit_button "value="Submit Order">
+                
             </form>
         </div>
 

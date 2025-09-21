@@ -8,7 +8,7 @@ Description: This is the base template for the quotes app.
 
     {% block content %}
 
-        <div>
+        <div id="wrapper">
             <h1>Confirmation Page</h1>
 
             <p>Hi {{ name }}! Thank you for placing your order.</p>
@@ -17,10 +17,10 @@ Description: This is the base template for the quotes app.
             <h3>Items Ordered</h3>
             <ul>
                 {% for item, price in final_cart %}
-                    <li>{{ item }} - {{ price }}</li>
+                    <li>{{ item }} - ${{ price }}</li>
                 {% endfor %}
             </ul>
-            <p><strong>Total:</strong> {{ total }}</p>
+            <p><strong>Total:</strong> ${{ total }}</p>
 
 
 

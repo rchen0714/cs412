@@ -21,6 +21,7 @@ IMAGES = [
 ]
 
 main_image = "https://lh3.googleusercontent.com/gps-cs-s/AC9h4npVmalxD7EXSLl4MddXibZj8Z880Q4FHBIKcxY2j1FWkMXWGMGcM1WL_CTWImOPmRFaCnZnSiAnl_leUzcIruBwjKyVqXxS-CFC9PKU3gvw427dsyW_8SyKb42IBKmWNB-8vDE=s1360-w1360-h1020"
+location_image = "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqITpksYjqRscVOlV6Ggjp4d5vGNVpnmVrXKlLu1zB42V7ICbR66oxyd6Dk5S0D-Xg8BFBl_mmmvQ2uNJ56jtJeBq3aVn-v0PFtncAfhIb1Ock439pncrgoI2beauXK4Dxu4cF3=s1360-w1360-h1020"
 
 daily_specials = [
     ('Lychee Pandan Toast', 8),
@@ -51,6 +52,7 @@ def main(request):
         "time": time.ctime(),
         "all_images": IMAGES,
         "main_image": main_image,
+        "location_image": location_image,
     }
 
     return render(request, template_name, context)
