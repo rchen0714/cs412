@@ -10,7 +10,7 @@ from django.shortcuts import render
 import time
 import random 
 
-# Global list of Quotes and Images 
+# All images and dictionaries used for the restaurant app 
 
 
 IMAGES = [
