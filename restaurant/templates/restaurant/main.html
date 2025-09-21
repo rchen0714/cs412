@@ -1,18 +1,46 @@
+<!-- 
+File: base.html
+Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+Description: This is the base template for the quotes app.
+-->
+
 {% extends "restaurant/base.html" %}
 
     {% block content %}
 
         <div>
-            <h1>Confirmation Page</h1>
+            <h1>Welcome to Oasis Sweet Restaurant!</h1>
 
-            <p>Hi {{ name }}! Your favorite color is {{ color }}.</p>
+            <p>We are delighted to have you here. Please feel free to explore our menu and an order.</p>
+            <img src="{{ main_image }}" alt="Bingsoo's from Oasis Sweet" height="400">
+        
         </div>
 
-        <footer>
-            The current time is {{time}}.
-            <br>
-            This page has been brought to you by the letters: 
-            {{letter1}} and {{letter2}} and by the number {{number}}.
-        </footer>
+        <h3> Gallery </h3>
+        
+        <div id="photo_gallery">
+
+            {% for image in all_images %}
+                <img src="{{ image }}" alt="A dessert dish from Oasis Sweets" width="400">
+            {% endfor %}
+
+        </div>
+
+        <div id="location_and_hours">
+            <p><strong>Location: </strong><a href="https://maps.app.goo.gl/GCx4neQHpb1dHapz8"> 1428 Beacon St, Brookline, MA 02446</a></p>
+
+            <h3>Hours of Operation</h3>
+
+            <ul>
+                <li>Friday: 2-10 PM</li>
+                <li>Saturday: 1-10 PM</li>
+                <li>Sunday: 1-10 PM</li>
+                <li>Monday: 2-10 PM</li>
+                <li>Tuesday: <em>Closed</em></li>
+                <li>Wednesday: 2-10 PM</li>
+                <li>Thursday: 2-10 PM</li>
+            </ul>
+        </div>
+
 
     {% endblock %}

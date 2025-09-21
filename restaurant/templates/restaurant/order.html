@@ -1,24 +1,53 @@
+<!-- 
+File: base.html
+Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+Description: This is the base template for the quotes app.
+-->
+
 
 {% extends "restaurant/base.html" %}
 
     {% block content %}
 
-        <div>
-            <h1>Contact Form</h1>
+        <div id="order_page">
+            <h1>Place an Online Order</h1>
+            <p>Use our online ordering system to place an order for delivery!</p>
 
-            <form action="{% url 'submit' %}" method="post">
+            <form action="{% url 'confirmation' %}" method="post">
                 {% csrf_token %}
-                Name: <input type="text" name="name">
-                Favorite Color: <input type="text" name="color">
-                <input type="submit">
+
+                <h2>Menu</h2>
+
+                <div id="menu_items">
+
+                    <p id="daily_special">
+                    <strong>Today's Daily Special</strong>: {{ random_daily.0 }}
+                    </p>
+
+                    <ul>
+                        {% for item, price in all_menu %}
+                        <li>
+                            {{ item }} - {{ price }}
+                            <label>
+                                <input type="checkbox" name="cart_items" value="{{ item }}">
+                                Add to order
+                            </label>
+                        </li>
+                        {% endfor %}
+
+                    </ul>
+                </div>
+
+                <h2>Customer Information</h2>
+                <div id="cust_input">
+                        Name: <input type="text" name="name">
+                        Email: <input type="text" name="email">
+                        Phone: <input type="text" name="phone">
+
+                        <strong>Special Instructions:</strong> <input type="text" name="instructions"></input>
+                </div>
+                <input type="submit" name="submit_button "value="Submit Order">
             </form>
         </div>
-
-        <footer>
-            The current time is {{time}}.
-            <br>
-            This page has been brought to you by the letters: 
-            {{letter1}} and {{letter2}} and by the number {{number}}.
-        </footer>
 
     {% endblock %}

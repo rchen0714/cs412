@@ -1,4 +1,8 @@
-<!-- hw/template/hw/base.html  -->
+<!-- 
+File: base.html
+Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+Description: This is the base template for the quotes app.
+-->
 
 {% load static %}
 
@@ -6,21 +10,32 @@
 <html>
 
     <head>
-        <title>Formdata Example</title>
+        <title>Oasis Sweet Restaurant</title>
         <link rel="stylesheet" href ="{% static 'styles.css' %}">
     </head>
+
+    
     <body>
+
+        <nav>
+            <ul>
+                <li><a href="{% url 'main_page' %}">Main</a></li>
+                <li><a href="{% url 'order_page' %}">Order</a></li>
+            </ul>
+        </nav>
+        
     
         <!-- specfied page content here  -->
+        <main>
 
         {% block content %}
         {% endblock %}
 
+        </main>
+
         <footer>
-            The current time is {{time}}.
-            <br>
-            This page has been brought to you by the letters: 
-            {{letter1}} and {{letter2}} and by the number {{number}}.
+            <p>&#169 Ruby Chen 2025. All rights reserved</p>
+            </p>Generated at: {{time}}</p>
         </footer>
     </body>
 

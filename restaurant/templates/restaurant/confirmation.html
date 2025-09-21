@@ -1,3 +1,9 @@
+<!-- 
+File: base.html
+Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+Description: This is the base template for the quotes app.
+-->
+
 {% extends "restaurant/base.html" %}
 
     {% block content %}
@@ -5,14 +11,31 @@
         <div>
             <h1>Confirmation Page</h1>
 
-            <p>Hi {{ name }}! Your favorite color is {{ color }}.</p>
+            <p>Hi {{ name }}! Thank you for placing your order.</p>
+            <p>Your order will be ready in <strong>{{ random_time }}</strong> minutes</p>
+
+            <h3>Items Ordered</h3>
+            <ul>
+                {% for item, price in final_cart %}
+                    <li>{{ item }} - {{ price }}</li>
+                {% endfor %}
+            </ul>
+            <p><strong>Total:</strong> {{ total }}</p>
+
+
+
+            <h3>Contact Information</h3>
+            
+            <ul>
+                <li><strong>Name:</strong> {{ name }}</li>
+                <li><strong>Phone:</strong> {{ phone }}</li>
+                <li><strong>Email:</strong> {{ email }}</li>
+            </ul>
+
+            <h3>Special Instructions</h>
+            <p>{{ instructions }}</p>
+
         </div>
 
-        <footer>
-            The current time is {{time}}.
-            <br>
-            This page has been brought to you by the letters: 
-            {{letter1}} and {{letter2}} and by the number {{number}}.
-        </footer>
-
     {% endblock %}
+ 
