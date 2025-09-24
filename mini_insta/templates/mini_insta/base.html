@@ -1,0 +1,41 @@
+
+
+{% load static %}
+
+<html>
+
+    <head>
+        <title>Mini Instagram</title>
+        <link rel="stylesheet" href="{% static 'styles-mini_insta.css' %}">
+    </head>
+
+    
+    <body>
+
+        <header>
+            <h1> Mini Instagram </h1>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="{% url 'show_profile' %}">Random Article</a></li>
+                <li><a href="{% url 'show_all_profile' %}">Show All</a></li>
+            </ul>
+        </nav>
+        
+    
+        <!-- specfied page content here  -->
+        <main>
+
+        {% block content %}
+        {% endblock %}
+
+        </main>
+
+        <footer>
+            <p>&#169 Ruby Chen 2025. All rights reserved</p>
+            </p>Generated at: {{time}}</p>
+        </footer>
+    </body>
+
+</html>
