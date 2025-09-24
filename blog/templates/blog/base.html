@@ -1,0 +1,41 @@
+
+
+{% load static %}
+
+<html>
+
+    <head>
+        <title>Our Blog</title>
+        <link rel="stylesheet" href="{% static 'styles-blog.css' %}">
+    </head>
+
+    
+    <body>
+
+        <header>
+            <h1> Our blog </h1>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="{% url 'random_article' %}">Random Article</a></li>
+                <li><a href="{% url 'show_all' %}">Show All</a></li>
+            </ul>
+        </nav>
+        
+    
+        <!-- specfied page content here  -->
+        <main>
+
+        {% block content %}
+        {% endblock %}
+
+        </main>
+
+        <footer>
+            <p>&#169 Ruby Chen 2025. All rights reserved</p>
+            </p>Generated at: {{time}}</p>
+        </footer>
+    </body>
+
+</html>
