@@ -3,19 +3,20 @@
 
 {% block content %}
 
-<h1>Show all Profiles</h1>
+<h1>All Profiles</h1>
 
-<main class="grid-container"> 
+<main class="wrapper"> 
+    <hr>
     {% for profile in profiles %}
     <profile>
-        <div>
-            <h2>{{ profile.username }}</h2>
-            <h3>by {{ profile.display_name }}</h3>
+        <div class="profile-text">
+            <h2>@{{ profile.username }}</h2>
+            <h3>{{ profile.display_name }}</h3>
             <p>{{ profile.bio_text }}</p>
         </div>
 
-        <a href="{% url 'profile' profile.pk %}">
-            <img src="{{ profile.profile_image_url }}" alt="">
+        <a href="{% url 'show_profile' profile.pk %}">
+            <img src="{{ profile.profile_image_url }}" alt="" width="40%">
         </a>
 
         <p>{{ profile.join_date }}</p>

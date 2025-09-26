@@ -34,11 +34,12 @@ ul{
 
 nav li{
     margin: 10% 0;
+    font-weight: 600;
 }
 
 nav a{
     text-decoration: none;
-    color: black;
+    color: #8B6449;
 }
 
 body{
@@ -65,9 +66,10 @@ main{
 
 h1{
     font-size: calc(10px + 2vw);
-    margin-bottom: 2%;
+    margin-bottom: 5%;
     color: #8B6449;
 }
+
 
 h3{
     font-size: calc(10px + 1vw);
@@ -75,122 +77,26 @@ h3{
     margin: 3% 0;
 }
 
-#hero{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    margin-bottom: 5%;
-}
-
-main img{
+img{
     margin: 5% 0;
     border-radius: 15px;
+    width:30%;
 }
 
-#photo_gallery{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5%;
-    justify-content: center;
-}
-
-#location {
-    margin: 5% 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    font-size: calc(5px + 1vw);
-}
-
-#hours{
-     margin: 5% 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
-
-#hours ul{
-    margin-top: 5%;
-     list-style: none;
-    display: flex;
-    flex-direction: column;
-}
-
-#hours li{
-    margin: 5% 0;
-    font-size: calc(5px + 1vw);
-}
-
-#location_and_hours{
-    margin: 5% 0;
-    display: flex;
-    flex-direction: row;
-    gap: 10%;
-    justify-content: center;
-}
-
-#daily_special {
-    text-align: center;
-    margin: 1% 0;
-    font-size: calc(6px + 1vw);
-    font-weight: 500;
-}
-
-#menu_items{
+hr{
     margin: 3% 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
-
-#menu_items ul{
-    list-style: none;
-    width: 80%;
-}
-
-#menu_items li{
-    margin: 2% 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid #8B6449;
-    padding: 3% 5%;
-    border-radius: 10px;
-    font-size: calc(5px + 1vw);
-}
-
-#cust_input{
-    margin: 3% 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-#cust_input p {
-    margin: 1% 0;
-    font-size: calc(5px + 1vw);
-}
-
-#cust_input input{
-    margin-top: 3%;
-}
-
-input[type="submit"]{
-    background-color: #8B6449; 
-    color: white;
-    font-size: calc(5px + 1vw);
-    font-weight: 600;
-    padding: 2vh 3vw;
-    border: solid #543824 1px;
-    border-radius: 10px;
 }
 
 footer{
     font-size: calc(2px + 1vw);
+    padding-bottom: 3%;
     color: #888888;
-    padding: 2% 0;
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+    text-align: center;
+}
+
+footer a{
+    color: #888888;
 }
