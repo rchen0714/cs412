@@ -1,3 +1,9 @@
+<!-- 
+File: show_all_profile.html
+Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+Description: This is the show all profile template for the mini_insta app.
+-->
+
 
 {% extends 'mini_insta/base.html' %}
 
@@ -7,13 +13,22 @@
 
 <main class="wrapper"> 
     <hr>
+    <!-- Loop through each profile to display it -->
     {% for profile in profiles %}
     <profile>
+
+        <!-- Displays all users username, display name, bio, 
+            profile image, and join date. based on the data passed 
+            into the model  -->
+
         <div class="profile-text">
-            <h2>@{{ profile.username }}</h2>
+            <h2>@{{ profile.username }}</h2> 
             <h3>{{ profile.display_name }}</h3>
             <p>{{ profile.bio_text }}</p>
         </div>
+
+        <!-- if a user clicks on the image, it will take them to that 
+        specific profile page -->
 
         <a href="{% url 'show_profile' profile.pk %}">
             <img src="{{ profile.profile_image_url }}" alt="" width="40%">

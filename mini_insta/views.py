@@ -1,3 +1,7 @@
+# File: mini_insta/views.py
+# Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+# Description: This file defines displays/views for the mini_insta app.
+
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 from .models import Profile
