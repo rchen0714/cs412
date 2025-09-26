@@ -8,14 +8,18 @@
 
     <profile>
         <div>
-            <h2>{{ profile.name }}</h2>
-            <h3>by {{ profile.user.username }}</h3>
-            <p>{{ profile.bio }}</p>
+            <h2>{{ profile.username }}</h2>
+            <h3>by {{ profile.display_name }}</h3>
+            <p>{{ profile.bio_text }}</p>
         </div>
 
-        <img src="{{ profile.image_url }}" alt="">
-        <hr>
+        <a href="{% url 'profile' profile.pk %}">
+            <img src="{{ profile.profile_image_url }}" alt="images of the chiikawa characters">
+        </a>
 
+        <p>{{ profile.join_date }}</p>
+        <hr>
+        {% endfor %}
     </profile>
    
 </main>

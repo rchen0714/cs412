@@ -9,7 +9,7 @@ from django.db import models
 class Profile(models.Model):
     '''Encalsulate the model of a blog Article by an author'''
     
-    usename = models.TextField(blank=True)
+    username = models.TextField(blank=True)
     display_name = models.TextField(blank=True)
     bio_text = models.TextField(blank=True)
     join_date = models.DateTimeField(auto_now=True)
