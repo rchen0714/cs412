@@ -1,22 +1,31 @@
+<!-- 
+File: base.html
+Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+Description: This is the create post form for the mini_insta app.
+-->
+
+
 {% extends 'mini_insta/base.html' %}
 
 {% block content %}
 
-<div class="form-header">
-    <h1>Create a New Post for {{ profile.username }}</h1>
-    <img src="{{ profile.profile_image_url }}" alt="images of the chiikawa characters">
-</div>
+    <!-- Header for Create Post -->
+    <div class="form-header">
+        <h1>Create a New Post for {{ profile.username }}</h1>
+        <img src="{{ profile.profile_image_url }}" alt="images of the chiikawa characters">
+    </div>
 
-<form method="post">
-    {% csrf_token %}
+    <!-- Form for Creating Post with Image URL field and submission buttons -->
+    <form method="post">
+        {% csrf_token %}
 
-    <table>
-        {{ form.as_table }}
-    </table>
+        <table>
+            {{ form.as_table }}
+        </table>
 
-    <input type="submit" value="Create Post">
-    <a href="{% url 'show_profile' profile.pk %}"><input type="button" value="Back"></a>
+        <input type="submit" value="Create Post">
+        <a href="{% url 'show_profile' profile.pk %}"><input type="button" value="Back"></a>
 
-</form>
+    </form>
 
 {% endblock %}

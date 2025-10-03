@@ -43,10 +43,15 @@ class CreatePostView(CreateView):
     template_name = "mini_insta/create_post_form.html"
 
     def get_success_url(self):
+        '''Defines where to redirect the user after successfully creating
+        a new post.'''
+
         pk = self.object.profile.pk
         return reverse('show_post', kwargs={'pk': self.object.pk})
     
     def get_context_data(self):
+
+        '''Defines and adds any extra context variables'''
         context = super().get_context_data()
 
         pk = self.kwargs['pk']

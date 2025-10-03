@@ -1,23 +1,28 @@
 <!-- 
-File: show_profile.html
+File: show_post.html
 Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
-Description: This is the singular profile template for the mini_insta app.
+Description: This is the singular post template for the mini_insta app.
 -->
 
 {% extends 'mini_insta/base.html' %}
 
 {% block content %}
 
-
 <main class="wrapper"> 
 
     <post>
         <hr>
+        <!-- Header of post states who's post -->
         <div class="post-header">
             <h2>Post by {{ post.profile.username }}</h2>
         </div>
 
+        <!-- Loops throough all photos linked to a singular post 
+         and displays them with a timestamp and caption -->
         <div class="post_photo">
+
+            <!-- if there are photos then display them or else 
+             state no images available and just display the caption -->
             {% if post.get_all_photos %}
                 {% for photo in post.get_all_photos %}
                     <div>
@@ -29,6 +34,7 @@ Description: This is the singular profile template for the mini_insta app.
                 <p>No images are available for this post</p>
             {% endif %}
 
+            <!-- the caption -->
             <p><strong>@{{ post.profile.username }}</strong>: {{ post.caption }}</p>
             <p>Posted on {{ post.timestamp }}</p>
         </div>

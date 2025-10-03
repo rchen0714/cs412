@@ -49,8 +49,6 @@ class Post(models.Model):
         return photos
     
    
-    
-
 class Photo(models.Model):
     '''Encapsulate the model of a photo in a post'''
     
