@@ -1,0 +1,22 @@
+{% extends 'mini_insta/base.html' %}
+
+{% block content %}
+
+<div class="form-header">
+    <h1>Create a New Post for {{ profile.username }}</h1>
+    <img src="{{ profile.profile_image_url }}" alt="images of the chiikawa characters">
+</div>
+
+<form method="post">
+    {% csrf_token %}
+
+    <table>
+        {{ form.as_table }}
+    </table>
+
+    <input type="submit" value="Create Post">
+    <a href="{% url 'show_profile' profile.pk %}"><input type="button" value="Back"></a>
+
+</form>
+
+{% endblock %}

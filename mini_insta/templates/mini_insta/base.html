@@ -40,6 +40,11 @@ Description: This is the base template for the mini_insta app.
         <footer>
             <p>&#169 Ruby Chen 2025. All rights reserved</p>
             <p><a href="{% url 'show_all_profiles' %}">All Profiles</a></p>
+            {% if profile %}
+            <p>
+                <a href="{% url 'create_post' profile.pk %}">Create Post</a>
+            </p>
+            {% endif %}
         </footer>
     </body>
 

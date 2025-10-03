@@ -62,4 +62,4 @@ class Photo(models.Model):
     def __str__(self):
         '''Return a string representation of this model instance'''
 
-        return f"Photo for {self.post} at {self.image_url} made on {self.timestramp}"
+        return f"Photo for {self.post} at {self.image_url} made on {self.timestamp}"
