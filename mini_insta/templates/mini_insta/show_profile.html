@@ -31,7 +31,27 @@ Description: This is the singular profile template for the mini_insta app.
         <p>{{ profile.join_date }}</p>
         <hr>
     </profile>
-   
+
+    <h2> Posts by {{ profile.username }}</h2>
+
+    <div>
+        {% for post in profile.get_all_posts %}
+            <div class="post">
+                <div class="photos">
+                    {% if post.get_all_photos %}
+                        <img src="{{ post.get_all_photos.0.image_url }}" alt="Post image">
+                        <p>photo taken on {{ post.get_all_photos.0.timestamp }}</p>
+                    {% else %}
+                        <img src="https://eagle-sensors.com/wp-content/uploads/unavailable-image.jpg" alt="no image available">
+                        <p>No image available</p>
+                    {% endif %}
+                <p><strong>@{{ post.profile.username }}</strong>: {{ post.caption }}</p>
+                <a href="{% url 'show_post' post.pk %}">Show Post Details</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
 </main>
 
 {% endblock %}

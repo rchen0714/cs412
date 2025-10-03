@@ -1,0 +1,42 @@
+<!-- 
+File: show_profile.html
+Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+Description: This is the singular profile template for the mini_insta app.
+-->
+
+{% extends 'mini_insta/base.html' %}
+
+{% block content %}
+
+
+<main class="wrapper"> 
+
+    <post>
+        <hr>
+        <div class="post-header">
+            <h2>Post by {{ post.profile.username }}</h2>
+        </div>
+
+        <div class="post_photo">
+            {% if post.get_all_photos %}
+                {% for photo in post.get_all_photos %}
+                    <div>
+                        <img src="{{ photo.image_url }}">
+                        <p>taken on {{ photo.timestamp }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No images are available for this post</p>
+            {% endif %}
+
+            <p><strong>@{{ post.profile.username }}</strong>: {{ post.caption }}</p>
+            <p>Posted on {{ post.timestamp }}</p>
+        </div>
+
+    </post>
+
+        
+
+</main>
+
+{% endblock %}
