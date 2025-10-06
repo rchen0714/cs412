@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, CreateView
-from .models import Article
-from .forms import CreateArticleForm, CreateCommentForm
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from .models import Article, Comment
+from .forms import CreateArticleForm, CreateCommentForm, UpdateArticleForm
 from django.urls import reverse
 import random
 
@@ -44,6 +44,11 @@ class CreateArticleView(CreateView):
     form_class = CreateArticleForm
     template_name = "blog/create_article_form.html"
 
+    def form_valid(self, form):
+
+        print(f'CreateArticleView: form_valid(): {form.cleaned_data}')
+        return super().form_valid(form)
+
 
 class CreateCommentView(CreateView):
     '''Define a view class to create a new comment on an article'''
@@ -76,3 +81,32 @@ class CreateCommentView(CreateView):
 
         return super().form_valid(form)
     
+class UpdateArticleView(UpdateView):
+    '''Define a view class to update an existing blog article'''
+
+    model = Article
+    form_class = UpdateArticleForm
+    template_name = "blog/update_article_form.html"
+    
+    def form_valid(self, form):
+        '''
+        Handle the form submission to create a new Article object.
+        '''
+        print(f'UpdateArticleView: form.cleaned_data={form.cleaned_data}')
+ 
+ 
+        return super().form_valid(form)
+
+class DeleteCommentView(DeleteView):
+    '''Define a view class to delete an existing comment on an article'''
+
+    model = Comment
+    template_name = "blog/delete_comment_form.html"
+
+    def get_success_url(self):
+
+        pk = self.kwargs['pk']
+        comment = Comment.objects.get(pk=pk)
+
+        article = comment.article
+        return reverse('article', kwargs={'pk': article.pk})
