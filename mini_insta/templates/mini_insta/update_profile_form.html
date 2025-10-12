@@ -1,0 +1,40 @@
+
+
+
+{% extends 'mini_insta/base.html' %}
+
+{% block content %}
+
+    <!-- Header for Update Post -->
+    <div class="form-header">
+        <h1>Update Profile for {{ profile.username }}</h1>
+        <img src="{{ profile.profile_image_url }}" alt="images of the chiikawa characters">
+    </div>
+
+    <!-- Form for Updating Post with Image URL field and submission buttons -->
+    <form method="post">
+        {% csrf_token %}
+
+        <table>
+            <tr>
+                <th>{{ form.display_name.label_tag }}</th>
+                <td>{{ form.display_name }}</td>
+            </tr>
+            <tr>
+                <th>{{ form.bio_text.label_tag }}</th>
+                <td>{{ form.bio_text }}</td>
+            </tr>
+            <tr>
+                <th>{{ form.profile_image_url.label_tag }}</th>
+                <td>{{ form.profile_image_url }}</td>
+            </tr>
+        </table>
+
+        <input type="submit" value="Save Changes">
+        <a href="{% url 'show_profile' profile.pk %}">
+            <input type="button" value="Back">
+        </a>
+
+    </form>
+
+{% endblock %}

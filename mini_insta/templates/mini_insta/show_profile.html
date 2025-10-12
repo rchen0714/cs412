@@ -29,6 +29,9 @@ Description: This is the singular profile template for the mini_insta app.
         </a>
 
         <p>{{ profile.join_date }}</p>
+        <div class="update-link">
+            <a class="primary buttons" href="{% url 'update_profile' profile.pk %}">Update Profile</a>
+        </div>
         <hr>
     </profile>
 

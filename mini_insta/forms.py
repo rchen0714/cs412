@@ -4,7 +4,7 @@
 
 
 from django import forms
-from .models import Post
+from .models import Post, Profile
 
 class CreatePostForm(forms.ModelForm):
     '''Define a form to create a new post''' 
@@ -15,6 +15,20 @@ class CreatePostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['caption']
+
+class UpdateProfileForm(forms.ModelForm):
+    """Edit profile fields of a profile. all of the data attributes of the Profile class
+        except NOT the user's username and join_date"""
+    class Meta:
+        model = Profile
+        fields = ['display_name', 'bio_text', 'profile_image_url']
+
+class UpdatePostForm(forms.ModelForm):
+    """Edit caption of a post."""
+    class Meta:
+        model = Post
+        fields = ['caption']
+        
 
 
 

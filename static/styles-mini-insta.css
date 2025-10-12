@@ -104,3 +104,14 @@ footer a{
 
 
 /* Specfic styling for show_profile */
+
+a.primary.buttons {
+    margin: 2% 0;
+    padding: 2% 5%;
+    background-color: #8B6449;
+    color: white;
+    border-radius: 10px;
+    width: fit-content;
+    text-decoration: none;
+    display: inline-block;
+}

@@ -3,6 +3,7 @@
 # Description: This file defines the data models for the mini_insta app.
 
 from django.db import models
+from django.urls import reverse
 
 # Create your models here.
 
@@ -27,6 +28,10 @@ class Profile(models.Model):
         
         posts = Post.objects.filter(profile=self).order_by('-timestamp')
         return posts
+    
+    def get_absolute_url(self):
+        '''Return the url to access a particular profile instance.'''
+        return reverse('show_profile', kwargs={'pk': self.pk})
     
 
 class Post(models.Model):

@@ -37,6 +37,9 @@ Description: This is the singular post template for the mini_insta app.
             <!-- the caption -->
             <p><strong>@{{ post.profile.username }}</strong>: {{ post.caption }}</p>
             <p>Posted on {{ post.timestamp }}</p>
+
+            <a class="primary buttons" href="{% url 'update_post' post.pk %}">Update</a>
+            <a class="primary buttons" href="{% url 'delete_post' post.pk %}">Delete</a>
         </div>
 
     </post>

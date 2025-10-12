@@ -6,9 +6,9 @@ from importlib.resources import files
 import profile
 from django.shortcuts import render
 from django.urls import reverse
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from mini_insta.forms import CreatePostForm
+from mini_insta.forms import CreatePostForm, UpdateProfileForm, UpdatePostForm
 from .models import Photo, Post, Profile
 
 
@@ -48,7 +48,7 @@ class CreatePostView(CreateView):
         a new post.'''
 
         pk = self.object.profile.pk
-        return reverse('show_post', kwargs={'pk': self.object.pk})
+        return reverse('show_post', kwargs={'pk': pk})
     
     def get_context_data(self):
 
@@ -81,3 +81,57 @@ class CreatePostView(CreateView):
         response = super().form_valid(form)
 
         return response
+    
+class UpdateProfileView(UpdateView):
+    """Edit an already previously existing profile"""
+    model = Profile
+    form_class = UpdateProfileForm
+    template_name = "mini_insta/update_profile_form.html"
+
+
+class DeletePostView(DeleteView):
+    """Delete a post"""
+    model = Post
+    template_name = "mini_insta/delete_post_form.html"
+    context_object_name = "post"
+
+    def get_context_data(self, **kwargs):
+        """Provide post and profile to the template."""
+        context = super().get_context_data(**kwargs)
+
+        post = self.get_object()
+
+        context["post"] = post
+        context['profile'] = post.profile
+
+        return context
+
+    def get_success_url(self):
+        """Redirect to the profile page of the deleted post."""
+        post = self.get_object()
+        return reverse('show_profile', kwargs={'pk': post.profile.pk})
+    
+class UpdatePostView(UpdateView):
+    """Edit an already previously existing post"""
+    model = Post
+    form_class = UpdatePostForm
+    template_name = "mini_insta/update_post_form.html"
+
+    def get_context_data(self, **kwargs):
+        """Provide post and profile to the template."""
+        context = super().get_context_data(**kwargs)
+
+        post = self.get_object()
+
+        context["post"] = post
+        context['profile'] = post.profile
+
+        return context
+
+    def get_success_url(self):
+        """Redirect to the post page of the updated post."""
+        post = self.get_object()
+        return reverse('show_post', kwargs={'pk': post.pk})
+
+    
+
