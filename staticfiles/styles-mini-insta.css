@@ -105,7 +105,6 @@ footer a{
 
 /* Specfic styling for show_profile */
 
-
 a.primary.buttons {
     margin: 2% 0;
     padding: 2% 5%;
@@ -116,6 +115,3 @@ a.primary.buttons {
     text-decoration: none;
     display: inline-block;
 }
-
-
-
