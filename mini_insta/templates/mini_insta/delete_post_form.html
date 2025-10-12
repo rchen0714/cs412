@@ -1,3 +1,9 @@
+<!-- 
+File: delete_post.html
+Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+Description: This is the delete post template for the mini_insta app.
+-->
+
 
 {% extends 'mini_insta/base.html' %}
 
@@ -5,9 +11,13 @@
 
 <h1>Delete Post Confirmation</h1>
 
+<!-- confirmation message with a scriplet to show the post to be deleted -->
 <p>Are you sure you want to delete this post?</p>
 <p>{{ post }}</p>
 
+<!-- pass in csrf token to validate the input and two buttons to
+    either delete or cancel -->
+    
 <div class="form-container">
     <form method="post" style="display:inline;">
         {% csrf_token %}

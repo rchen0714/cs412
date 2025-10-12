@@ -69,6 +69,8 @@ class Photo(models.Model):
     def __str__(self):
         '''Return a string representation of this model instance'''
 
+        #Will return a string based on whether the photo has an image URL or an image file
+        
         if self.image_url:
             return f"Photo for {self.post} at {self.image_url} made on {self.timestamp}"
         elif self.image_file:
@@ -80,7 +82,7 @@ class Photo(models.Model):
     def get_image_url(self):
         '''Return the image URL if it exists, otherwise return the image file path'''
 
-        # returns the image URL
+        # returns the image URL if there is one, otherwise returns the image file path
         
         if self.image_url:
             return self.image_url
