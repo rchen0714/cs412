@@ -43,7 +43,7 @@ Description: This is the singular profile template for the mini_insta app.
                         <!-- if there are photos then display them 
                          or else display a no image available image-->
                         {% if post.get_all_photos %}
-                            <img src="{{ post.get_all_photos.0.image_url }}" alt="Post image">
+                            <img src="{{ post.get_all_photos.0.get_image_url }}" alt="Post image">
                             <p>photo taken on {{ post.get_all_photos.0.timestamp }}</p>
                         {% else %}
                             <img src="https://eagle-sensors.com/wp-content/uploads/unavailable-image.jpg" alt="no image available">

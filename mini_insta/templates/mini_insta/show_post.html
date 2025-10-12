@@ -26,7 +26,7 @@ Description: This is the singular post template for the mini_insta app.
             {% if post.get_all_photos %}
                 {% for photo in post.get_all_photos %}
                     <div>
-                        <img src="{{ photo.image_url }}">
+                        <img src="{{ photo.get_image_url }}">
                         <p>taken on {{ photo.timestamp }}</p>
                     </div>
                 {% endfor %}

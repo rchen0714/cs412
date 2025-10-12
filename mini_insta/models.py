@@ -54,10 +54,32 @@ class Photo(models.Model):
     
     
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    image_url = models.URLField(blank=True)
+
+    image_url  = models.URLField(blank=True)        
+    image_file = models.ImageField(blank=True)
+    
+
     timestamp = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         '''Return a string representation of this model instance'''
 
-        return f"Photo for {self.post} at {self.image_url} made on {self.timestamp}"
+        if self.image_url:
+            return f"Photo for {self.post} at {self.image_url} made on {self.timestamp}"
+        elif self.image_file:
+            return f"Photo for {self.post} at {self.image_file.url} made on {self.timestamp}"
+        else:
+            return f"{self.post} has no image, made on {self.timestamp}"
+    
+
+    def get_image_url(self):
+        '''Return the image URL if it exists, otherwise return the image file path'''
+
+        # returns the image URL
+        
+        if self.image_url:
+            return self.image_url
+        elif self.image_file:
+            return self.image_file.url
+        else:
+            return None

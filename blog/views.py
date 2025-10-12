@@ -81,6 +81,20 @@ class CreateCommentView(CreateView):
 
         return super().form_valid(form)
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 class UpdateArticleView(UpdateView):
     '''Define a view class to update an existing blog article'''
 

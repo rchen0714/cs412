@@ -2,6 +2,7 @@
 # Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
 # Description: This file defines displays/views for the mini_insta app.
 
+from importlib.resources import files
 import profile
 from django.shortcuts import render
 from django.urls import reverse
@@ -68,12 +69,15 @@ class CreatePostView(CreateView):
         pk = self.kwargs['pk']
         profile = Profile.objects.get(pk=pk)
 
+        post = form.save(commit=False)
+        post.profile = profile
+        post.save()
+
         form.instance.profile = profile
 
+        files = self.request.FILES.getlist('files')
+        for file in files:
+            Photo.objects.create(post=post, image_file=file)
         response = super().form_valid(form)
-
-        image_url = form.cleaned_data.get("image_url")
-        if image_url:
-            Photo.objects.create(post=self.object, image_url=image_url)
 
         return response

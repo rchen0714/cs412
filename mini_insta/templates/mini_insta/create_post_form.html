@@ -16,15 +16,21 @@ Description: This is the create post form for the mini_insta app.
     </div>
 
     <!-- Form for Creating Post with Image URL field and submission buttons -->
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
         <table>
             {{ form.as_table }}
+            <tr>
+                <th>Select Photo(s)</th>
+                <td><input type="file" name="files" multiple></td>
+            </tr>
         </table>
 
         <input type="submit" value="Create Post">
-        <a href="{% url 'show_profile' profile.pk %}"><input type="button" value="Back"></a>
+        <a href="{% url 'show_profile' profile.pk %}">
+            <input type="button" value="Back">
+        </a>
 
     </form>
 
