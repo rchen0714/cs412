@@ -9,12 +9,12 @@
 <p>{{ post }}</p>
 
 <div class="form-container">
-    <form method="post">
+    <form method="post" style="display:inline;">
         {% csrf_token %}
         <input type="submit" value="Delete">
     </form>
 
-    <form action="{% url 'show_profile' profile.pk %}" method="get">
+    <form action="{% url 'show_profile' profile.pk %}" method="get" style="display:inline;">
         <input type="submit" value="Cancel">
     </form>
 </div>
