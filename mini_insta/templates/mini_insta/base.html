@@ -65,6 +65,11 @@ Description: This is the base template for the mini_insta app.
                 <a href="{% url 'show_profile' profile.pk %}">My Profile</a>
             </p>
 
+            <!--Search Functionality -->
+             <p>
+                <a href="{% url 'search' profile.pk %}">Search</a>
+            </p>
+
 
             {% endif %}
         </footer>

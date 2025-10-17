@@ -1,0 +1,67 @@
+<!-- 
+File: search_results.html
+Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+Description: this template extends base and displays the 
+search result functionality 
+-->
+
+
+{% extends 'mini_insta/base.html' %}
+
+{% block content %}
+
+    <hr>
+    <h2>Search Results for "{{ query }}"</h2>
+
+    <!-- Back link to Search functionality -->
+    <p>
+        <a href="{% url 'search' profile.pk %}">Back to Search</a>
+    </p>
+
+    <!-- Profiles section -->
+    <div class="search-profiles">
+        <h3>Profiles</h3>
+        {% if profiles %}
+            <ul>
+                {% for p in profiles %}
+                    <li>
+                        <a href="{% url 'show_profile' p.pk %}">
+                            <img src="{{ p.profile_image_url }}" alt="{{ p.username }}">
+                            {{ p.display_name }} (@{{ p.username }})
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No profiles found.</p>
+        {% endif %}
+        </div>
+
+    <hr>
+
+    <!-- Posts section -->
+    <div class="search-posts">
+        <h3>Posts</h3>
+        {% if posts %}
+            <ul>
+                {% for post in posts %}
+                    <li>
+                        {% if post.get_all_photos %}
+                            <img src="{{ post.get_all_photos.0.get_image_url }}" alt="Post image">
+                        {% else %}
+                             <p>No images are available for this post</p>
+                        {% endif %}
+                        <a href="{% url 'show_post' post.pk %}">
+                            <strong>@{{ post.profile.username }}</strong>: {{ post.caption }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No posts found.</p>
+        {% endif %}
+        </div>
+
+    <hr>
+
+{% endblock %}

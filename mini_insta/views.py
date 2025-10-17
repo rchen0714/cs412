@@ -10,6 +10,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 
 from mini_insta.forms import CreatePostForm, UpdateProfileForm, UpdatePostForm
 from .models import Photo, Post, Profile
+from django.db.models import Q
 
 
 # Create your views here.
@@ -174,5 +175,56 @@ class PostFeedListView(ListView):
         context['profile'] = profile
         return context
     
+class SearchView(ListView):
+    '''Search across specific profiles and posts based on a text query'''
+
+    template_name = "mini_insta/search_results.html"
+    context_object_name = "profiles"
+
+    def dispatch(self, request, *args, **kwargs):
+        if 'q' not in self.request.GET:
+            pk = self.kwargs['pk']
+            profile = Profile.objects.get(pk=pk)
+            return render(request, "mini_insta/search.html", {"profile": profile})
+
+        return super().dispatch(request, *args, **kwargs)
     
+    def get_queryset(self):
+        '''Return the list of profiles matching the search query'''
+
+        query = self.request.GET.get('q', '')
+
+        if not query:
+            return Profile.objects.none()
+        
+        post_matches = Post.objects.filter(caption__icontains=query).order_by('-timestamp')
+
+        return post_matches
+    
+    def get_context_data(self, **kwargs):
+        '''returns a dictionary of all the context data from the template'''
+        context = super().get_context_data()
+
+        pk = self.kwargs['pk'] 
+        profile = Profile.objects.get(pk=pk)
+        query = self.request.GET.get('q', '')
+
+        if query:
+             posts = Post.objects.filter(caption__icontains=query).order_by('-timestamp')
+        else: 
+             posts = Post.objects.none()
+        
+        profiles = Profile.objects.filter(
+            Q(username__icontains=query) |
+            Q(display_name__icontains=query) |
+            Q(bio_text__icontains=query)
+        )
+
+        context['profile'] = profile
+        context['profiles'] = profiles
+        context['posts'] = posts
+        context['query'] = query
+
+        return context
+
 

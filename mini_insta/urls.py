@@ -5,7 +5,7 @@
 from django.urls import path
 from .views import ProfileListView, ProfileDetailView, PostDetailView, CreatePostView
 from .views import UpdateProfileView, DeletePostView, UpdatePostView, ShowFollowersDetailView, ShowFollowingDetailView
-from .views import PostFeedListView
+from .views import PostFeedListView, SearchView
 
 # Define URL patterns for the mini_insta app
 urlpatterns = [
@@ -20,5 +20,6 @@ urlpatterns = [
     path('profile/<int:pk>/followers', ShowFollowersDetailView.as_view(), name='show_followers'),
     path('profile/<int:pk>/following', ShowFollowingDetailView.as_view(), name='show_following'),
     path('profile/<int:pk>/feed', PostFeedListView.as_view(), name='show_feed'),
+    path('profile/<int:pk>/search', SearchView.as_view(), name='search'),
 ]
 
