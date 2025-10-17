@@ -65,6 +65,13 @@ class Profile(models.Model):
         f_count = Follow.objects.filter(follower_profile=self).count()
         return f_count
     
+    def get_post_feed(self):
+        '''Return all posts made by profiles this profile is following with a QuerySet'''
+        
+        following_profiles = Follow.objects.filter(follower_profile=self).values_list('profile', flat=True)
+        feed = Post.objects.filter(profile__in=following_profiles).order_by('-timestamp')
+        return feed
+
 
 class Post(models.Model):
     '''Encapsulate the model of a post by an author'''
