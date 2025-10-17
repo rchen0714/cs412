@@ -29,9 +29,41 @@ class Profile(models.Model):
         posts = Post.objects.filter(profile=self).order_by('-timestamp')
         return posts
     
+    
     def get_absolute_url(self):
         '''Return the url to access a particular profile instance.'''
         return reverse('show_profile', kwargs={'pk': self.pk})
+    
+    #Follower methods 
+    def get_followers(self):
+        '''Return all profiles that follow this profile'''
+        
+        #grab the Follow objects where the profile is being followed
+        followers_query = Follow.objects.filter(profile=self)
+        #return a list of the profiles within that object 
+        followers = [follow.follower_profile for follow in followers_query]
+        return followers
+    
+    def get_num_followers(self):
+        '''Return the number of followers this profile has'''
+        
+        f_count = Follow.objects.filter(profile=self).count()
+        return f_count 
+    
+    #Following methods 
+
+    def get_following(self):
+        '''Return all profiles that this profile is following'''
+        #grab the Follow objects where the profile is the follower
+        following_query = Follow.objects.filter(follower_profile=self)
+        #return a list of the profiles within that object 
+        following = [follow.profile for follow in following_query]
+        return following
+    
+    def get_num_following(self):
+        '''Return the number of profiles this profile is following'''
+        f_count = Follow.objects.filter(follower_profile=self).count()
+        return f_count
     
 
 class Post(models.Model):
@@ -90,3 +122,20 @@ class Photo(models.Model):
             return self.image_file.url
         else:
             return None
+        
+#Now we will add three new models for assignment 6, Follow/Like/Comment 
+
+class Follow(models.Model):
+    '''Establishes a model of a follow relationship between two profiles'''
+    
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='profile')
+    follower_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='follower_profile')
+    timestamp = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        '''Return a string representation of the relationship between follower and followee'''
+
+        follower_user = self.follower_profile.display_name or self.follower_profile.username
+        followee_user = self.profile.display_name or self.profile.username
+        return f"{follower_user} followed {followee_user} on {self.timestamp}"
+    

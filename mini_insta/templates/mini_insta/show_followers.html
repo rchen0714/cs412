@@ -1,0 +1,27 @@
+{% extends 'mini_insta/base.html' %}
+
+{% block content %}
+    <h1>{{ profile.display_name }}'s Followers</h1>
+
+    <!-- List of followers for the specified profile: -->
+    <ul>
+    {% if profile.get_followers %}
+        <!-- if there are followers, loop through and list them -->
+        {% for p in profile.get_followers %}
+        <li>
+            <a href="{% url 'show_profile' p.pk %}">
+            {{ p.display_name }} (@{{ p.username }})
+            </a>
+        </li>
+        {% endfor %}
+    {% else %}
+        <!-- if there are no followers -->
+        <li>No followers yet.</li>
+    {% endif %}
+    </ul>
+
+    <form action="{% url 'show_profile' profile.pk %}" method="get" style="display:inline;">
+            <button type="submit" class="primary buttons">Back to Profile</button>
+    </form>
+
+{% endblock %}

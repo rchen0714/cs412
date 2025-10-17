@@ -24,12 +24,25 @@ Description: This is the singular profile template for the mini_insta app.
             <p>{{ profile.bio_text }}</p>
         </div>
 
-        <a href="{% url 'show_profile' profile.pk %}">
-            <img src="{{ profile.profile_image_url }}" alt="images of the chiikawa characters">
-        </a>
+        <div class="image_and_followers">
+
+            <div class="profile_image">
+                <a href="{% url 'show_profile' profile.pk %}">
+                    <img src="{{ profile.profile_image_url }}" alt="images of the chiikawa characters" style="width: 200px;">
+                </a>
+            </div>
+
+            <div class="followers">
+                <a id="follower-link" href="{% url 'show_followers' profile.pk %}">{{ profile.get_num_followers }} Followers</a> 
+                <a id="following-link" href="{% url 'show_following' profile.pk %}">{{ profile.get_num_following }} Following</a>
+            </div>
+
+        </div>
 
         <p>{{ profile.join_date }}</p>
-        <form action="{% url 'update_profile' profile.pk %}" method="get" style="display:inline;">
+        
+
+        <form id="update-profile" action="{% url 'update_profile' profile.pk %}" method="get" style="display:inline;">
             <button type="submit" class="primary buttons">Update Profile</button>
         </form>
         <hr>

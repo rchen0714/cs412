@@ -1,0 +1,27 @@
+{% extends 'mini_insta/base.html' %}
+
+{% block content %}
+    <h1>{{ profile.display_name }}'s Following</h1>
+
+    <!-- List of people profile is following -->
+    <ul>
+    {% if profile.get_following %}
+        <!-- if there are people being followed, loop through and list them -->
+        {% for p in profile.get_following %}
+        <li>
+            <a href="{% url 'show_profile' p.pk %}">
+            {{ p.display_name }} (@{{ p.username }})
+            </a>
+        </li>
+        {% endfor %}
+    {% else %}
+        <!-- if profile doesn't follow anyone -->
+        <li>Not following anyone yet.</li>
+    {% endif %}
+    </ul>
+
+    <form action="{% url 'show_profile' profile.pk %}" method="get" style="display:inline;">
+            <button type="submit" class="primary buttons">Back to Profile</button>
+    </form>
+
+{% endblock %}
