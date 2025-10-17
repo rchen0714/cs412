@@ -66,7 +66,10 @@ Description: This is the singular profile template for the mini_insta app.
                             <p>No image available</p>
                         {% endif %}
                     <p><strong>@{{ post.profile.username }}</strong>: {{ post.caption }}</p>
-                    <span id="link-obv"><a href="{% url 'show_post' post.pk %}">Show Post Details</a></span>
+                    
+                    <form id="show-post" action="{% url 'show_post' post.pk %}" method="get" style="display:inline;">
+                        <button type="submit" class="primary buttons">Show Post Detail</button>
+                    </form>
                     </div>
             </div>
         {% endfor %}

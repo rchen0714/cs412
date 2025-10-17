@@ -85,6 +85,12 @@ class Post(models.Model):
         photos = Photo.objects.filter(post=self)
         return photos
     
+    def get_all_comments(self):
+        '''Return all comments on this post'''
+        
+        comments = Comment.objects.filter(post=self).order_by('-timestamp')
+        return comments
+    
    
 class Photo(models.Model):
     '''Encapsulate the model of a photo in a post'''
@@ -138,4 +144,18 @@ class Follow(models.Model):
         follower_user = self.follower_profile.display_name or self.follower_profile.username
         followee_user = self.profile.display_name or self.profile.username
         return f"{follower_user} followed {followee_user} on {self.timestamp}"
+    
+class Comment(models.Model):
+    '''Establishes a model of a comment made by a profile on a post'''
+    
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    text = models.TextField(blank=True)
+    timestamp = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        '''Return a string representation of the comment'''
+
+        commenter = self.profile.display_name or self.profile.username
+        return f"{commenter} - {self.timestamp}: {self.text}"
     
