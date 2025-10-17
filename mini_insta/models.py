@@ -91,6 +91,11 @@ class Post(models.Model):
         comments = Comment.objects.filter(post=self).order_by('-timestamp')
         return comments
     
+    def get_likes(self):
+        '''Return all likes on this post'''
+        
+        likes = Like.objects.filter(post=self)
+        return likes
    
 class Photo(models.Model):
     '''Encapsulate the model of a photo in a post'''
@@ -159,3 +164,17 @@ class Comment(models.Model):
         commenter = self.profile.display_name or self.profile.username
         return f"{commenter} - {self.timestamp}: {self.text}"
     
+class Like(models.Model):
+    '''Establishes a model of a like made by a profile on a post'''
+    
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        '''Return a string representation of the like'''
+
+        liker = self.profile.display_name or self.profile.username
+        likee = self.post.profile.display_name or self.post.profile.username
+        return f"{liker} liked {likee}'s post on {self.timestamp}"
+

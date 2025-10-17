@@ -39,14 +39,35 @@ Description: This is the singular post template for the mini_insta app.
             <p>Posted on {{ post.timestamp }}</p>
 
             <form action="{% url 'update_post' post.pk %}" method="get" style="display:inline;">
-                    <button type="submit">Update</button>
+                    <button type="submit" class="primary buttons">Update</button>
             </form>
             <form action="{% url 'delete_post' post.pk %}" method="get" style="display:inline;">
-                    <button type="submit">Delete</button>
+                    <button type="submit" class="primary buttons">Delete</button>
             </form>
         </div>
 
         <hr>
+
+        <!-- Like count -->
+
+            <div class="like-section">
+                {% with post.get_likes as get_likes %}
+                    {% if get_likes.count > 0 %}
+                        <p>Liked by</p>
+                        {% for like in get_likes|slice:":1" %}
+                            <strong>@{{ like.profile.username }}</strong>
+                        {% endfor %}
+
+                        {% if get_likes.count > 1 %}
+                            and <strong>{{ get_likes.count|add:"-1" }} others</strong>
+                        {% endif %}
+                
+                    {% else %}
+                        <p>No likes yet.</p>
+                    {% endif %} 
+                {% endwith %}
+            </div>
+
 
         <!-- Comment section -->
         <h3>Comments</h3>
