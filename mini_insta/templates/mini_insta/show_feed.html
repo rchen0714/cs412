@@ -1,22 +1,22 @@
 <!-- 
 File: show_feed.html
 Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
-Description: This is the singular post template for the mini_insta app.
+Description: This shows a personalized feed of the user 
+only displaying posts from the users they 
 -->
 
 {% extends 'mini_insta/base.html' %}
 
 {% block content %}
 
-    <main class="wrapper"> 
-
-            <hr>
-            <!-- Header of the profiles feed -->
+    <hr>
+    <!-- Header of the profiles feed -->
             
             <div class="post-header">
                 <h2>@{{ profile.username }}'s Feed</h2>
             </div>
 
+            <!-- Display each post from the profiles that the user is following -->
             <div class="feed">
             {% if posts %}
                 {% for post in posts %}
@@ -30,6 +30,11 @@ Description: This is the singular post template for the mini_insta app.
                     </div>
 
                     <!-- Like count -->
+
+
+                        <!-- Displays the first user who liked the post using a slice filter,
+                        and if there’s more than one like, it shows how many additional
+                        users liked the post. -->
 
                         <div class="like-section">
                             {% with post.get_likes as get_likes %}
@@ -50,14 +55,15 @@ Description: This is the singular post template for the mini_insta app.
                     
                         </div>
 
-                    <!-- the caption -->
+                    <!-- the caption -- displays the caption with scriplet code-->
                     <div class="post-captions">
                         <p><strong>@{{ post.profile.username }}</strong>: {{ post.caption }}</p>
                         <p>Posted on {{ post.timestamp }}</p>
                     </div>
 
                     
-                    <!-- Comment section -->
+                    <!-- Comment section -- retrieves all comments using get_all_comments
+                     if there are no comments then it displays that there are no comments-->
                         <h3>Comments</h3>
                         {% if post.get_all_comments %}
                             <div class="comments-list">
@@ -73,11 +79,12 @@ Description: This is the singular post template for the mini_insta app.
                 </div>
                 <hr>
                 {% endfor %}
+
+            <!-- If the user follower no one that means there will be no 
+            posts in their feed -->
             {% else %}
                 <p>No posts available in your feed.</p>
             {% endif %}
             </div>  
-
-    </main>
 
 {% endblock %}

@@ -18,13 +18,16 @@ search result functionality
         <a href="{% url 'search' profile.pk %}">Back to Search</a>
     </p>
 
-    <!-- Profiles section -->
+    <!-- Profiles section -- Dislay any profiles that match the search option-->
     <div class="search-profiles">
         <h3>Profiles</h3>
-        {% if profiles %}
+        <!-- If there are any profiles that match the search query, they will be displayed
+        {% if profiles %} -->
             <ul>
+                <!-- Loop through all profiles that match the search query -->
                 {% for p in profiles %}
                     <li>
+                        <!-- Link the profile and show its user + display name  -->
                         <a href="{% url 'show_profile' p.pk %}">
                             <img src="{{ p.profile_image_url }}" alt="{{ p.username }}">
                             {{ p.display_name }} (@{{ p.username }})
@@ -32,6 +35,7 @@ search result functionality
                     </li>
                 {% endfor %}
             </ul>
+        <!-- Else then show that no profiles are found -->
         {% else %}
             <p>No profiles found.</p>
         {% endif %}
@@ -39,9 +43,13 @@ search result functionality
 
     <hr>
 
-    <!-- Posts section -->
+    <!-- Posts section - display posts that match search  -->
+
     <div class="search-posts">
         <h3>Posts</h3>
+
+        <!-- If there are any posts that match the search query, they will be displayed
+        or else they will show no posts found  -->
         {% if posts %}
             <ul>
                 {% for post in posts %}

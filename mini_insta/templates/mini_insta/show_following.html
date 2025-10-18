@@ -28,6 +28,7 @@ Description: This displays the profiles a specfic user is following
     {% endif %}
     </ul>
 
+    <!-- Button to return to the inital profile -->
     <form action="{% url 'show_profile' profile.pk %}" method="get" style="display:inline;">
             <button type="submit" class="primary buttons">Back to Profile</button>
     </form>

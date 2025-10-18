@@ -33,7 +33,7 @@ Description: This is the singular post template for the mini_insta app.
                 <p>No images are available for this post</p>
             {% endif %}
 
-            <!-- the caption -->
+            <!-- the caption -- displays the caption with scriplet code-->
             <p><strong>@{{ post.profile.username }}</strong>: {{ post.caption }}</p>
             <p>Posted on {{ post.timestamp }}</p>
 
@@ -47,7 +47,9 @@ Description: This is the singular post template for the mini_insta app.
 
         <hr>
 
-        <!-- Like count -->
+        <!-- Displays the first user who liked the post using a slice filter,
+        and if there’s more than one like, it shows how many additional
+        users liked the post. -->
 
             <div class="like-section">
                 {% with post.get_likes as get_likes %}
@@ -68,7 +70,8 @@ Description: This is the singular post template for the mini_insta app.
             </div>
 
 
-        <!-- Comment section -->
+       <!-- Comment section -- retrieves all comments using get_all_comments
+        if there are no comments then it displays that there are no comments-->
         <h3>Comments</h3>
         {% if post.get_all_comments %}
             <ul class="comments-list">

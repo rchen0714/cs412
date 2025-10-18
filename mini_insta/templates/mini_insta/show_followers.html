@@ -26,6 +26,7 @@ Description: This displays the followers for a specific profile
     {% endif %}
     </ul>
 
+    <!-- Button to return to the inital profile -->
     <form action="{% url 'show_profile' profile.pk %}" method="get" style="display:inline;">
             <button type="submit" class="primary buttons">Back to Profile</button>
     </form>

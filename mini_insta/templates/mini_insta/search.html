@@ -13,7 +13,7 @@ search functionality
     <h2>Search Posts and Profiles</h2>
     <p>Enter a keyword to find matching users or posts.</p>
 
-    <!-- form submits as a GET request to the same URL -->
+    <!-- form submits as a GET request to a search query -->
     <form action="{% url 'search' profile.pk %}" method="get">
         <label for="search-box">Search:</label><br>
         <input type="text" id="search-box" name="q">
