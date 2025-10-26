@@ -73,6 +73,13 @@ class Profile(models.Model):
         following_profiles = Follow.objects.filter(follower_profile=self).values_list('profile', flat=True)
         feed = Post.objects.filter(profile__in=following_profiles).order_by('-timestamp')
         return feed
+    
+    #implementing helper method to help with the follow functionality
+    def check_following(self, target_profile):
+        '''Check if this profile is following the target_profile'''
+        
+        is_following = Follow.objects.filter(profile=target_profile, follower_profile=self).exists()
+        return is_following
 
 
 class Post(models.Model):
@@ -105,6 +112,14 @@ class Post(models.Model):
         
         likes = Like.objects.filter(post=self)
         return likes
+    
+    #implementing helper methods to help with the like functionality
+
+    def check_liked_by(self, profile):
+        '''Check if this post is liked by the given profile'''
+        
+        is_liked = Like.objects.filter(post=self, profile=profile).exists()
+        return is_liked
    
 class Photo(models.Model):
     '''Encapsulate the model of a photo in a post'''

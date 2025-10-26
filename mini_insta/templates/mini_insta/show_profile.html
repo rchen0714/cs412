@@ -37,13 +37,31 @@ Description: This is the singular profile template for the mini_insta app.
         </div>
 
         <p>{{ profile.join_date }}</p>
-        
 
+        <!-- If the logged in user is viewing their own profile, show the update profile button -->
         {% if request.user.is_authenticated and profile.user == request.user %}
         <form id="update-profile" action="{% url 'update_profile' %}" method="get" style="display:inline;">
             <button type="submit" class="primary buttons">Update Profile</button>
         </form>
         {% endif %}
+
+        <!-- If it's another autheticated user they'll see the follow and unfollow button instead -->
+        {% if request.user.is_authenticated and profile.user != request.user %}
+            {% if is_following %}
+                <form action="{% url 'delete_follow' profile.pk %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="primary buttons">Unfollow</button>
+                </form>
+
+            {% else %}
+                <form action="{% url 'follow' profile.pk %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="primary buttons">Follow</button>
+                </form>
+            {% endif %}
+        {% endif %}
+
+
 
         <hr>
     </profile>

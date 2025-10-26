@@ -24,4 +24,13 @@
     {% endif %}
 </form> 
 
+<hr>
+
+<p>
+    Don't have an account? 
+    <form action="{% url 'create_profile' %}" method="get" style="display: inline;">
+        <input type="submit" value="Register here">
+    </form>
+</p>
+
 {% endblock %}

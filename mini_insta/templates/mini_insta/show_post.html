@@ -33,7 +33,7 @@ Description: This is the singular post template for the mini_insta app.
                 <p>No images are available for this post</p>
             {% endif %}
 
-            <!-- the caption -- displays the caption with scriplet code-->
+            <!-- the caption -- displays the caption with scriplet code for the current user-->
             <p><strong>@{{ post.profile.username }}</strong>: {{ post.caption }}</p>
             <p>Posted on {{ post.timestamp }}</p>
 
@@ -45,7 +45,24 @@ Description: This is the singular post template for the mini_insta app.
                     <button type="submit" class="primary buttons">Delete</button>
             </form>
             {% endif %}
-            
+
+            <!-- If it's another autheticated user they'll see the like and unlike button instead -->
+            {% if request.user.is_authenticated and post.profile.user != request.user %}
+                {% if is_liked %}
+                    <form action="{% url 'delete_like' post.pk %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">Unlike</button>
+                    </form>
+                {% else %}
+                    <form action="{% url 'like' post.pk %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">Like</button>
+                    </form>
+                {% endif %}
+            {% endif %}
+
+
+
         </div>
 
         <hr>

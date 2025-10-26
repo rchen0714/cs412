@@ -9,12 +9,12 @@ from django.contrib.auth.forms import UserCreationForm ## NEW
 from django.contrib.auth.models import User ## NEW
 from django.contrib.auth import login # NEW
 
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 
-from mini_insta.forms import CreatePostForm, UpdateProfileForm, UpdatePostForm
-from .models import Photo, Post, Profile
+from mini_insta.forms import CreatePostForm, UpdateProfileForm, UpdatePostForm, CreateProfileForm
+from .models import Follow, Like, Photo, Post, Profile
 from django.db.models import Q
 
 
@@ -46,6 +46,19 @@ class ProfileDetailView(CheckLogin, DetailView):
         
         else:
             return None
+        
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['profile'] = self.get_object()
+
+        if self.request.user.is_authenticated:
+            user = self.get_my_profile()
+            target_profile = self.object
+            context['is_following'] = user.check_following(target_profile)
+        else: 
+            context['is_following'] = False
+
+        return context
 
 class PostDetailView(DetailView):
     '''Display a single post'''
@@ -53,6 +66,17 @@ class PostDetailView(DetailView):
     model = Post
     template_name = "mini_insta/show_post.html"
     context_object_name = "post"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if self.request.user.is_authenticated:
+            user = Profile.objects.get(user=self.request.user)
+            context['is_liked'] = self.object.check_liked_by(user)
+        else: 
+            context['is_liked'] = False
+
+        return context
 
 
 class CreatePostView(CheckLogin, CreateView):
@@ -107,8 +131,7 @@ class UpdateProfileView(CheckLogin, UpdateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        post = self.get_object()
-        context["profile"] = post.profile 
+        context['profile'] = self.get_my_profile()
         return context
     
     def get_success_url(self):
@@ -250,5 +273,119 @@ class SearchView(CheckLogin, ListView):
         context['query'] = query
 
         return context
+    
+
+class CreateProfileView(CreateView):
+    """Create a new profile for a user"""
+
+    model = Profile
+    form_class = CreateProfileForm
+    template_name = "mini_insta/create_profile_form.html"
+
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user_form'] = UserCreationForm()
+        return context
+    
+    def form_valid(self, form):
+        '''Called when a valid form is submitted.'''
+
+        user_form = UserCreationForm(self.request.POST)
+        
+        if user_form.is_valid():
+            user = user_form.save()
+        else:
+            return self.render_to_response(
+                self.get_context_data(form=form, user_form=user_form)
+            )
+
+        login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
+
+        form.instance.user = user
+
+        response = super().form_valid(form)
+
+        return response
+    
+    def get_success_url(self):
+        """Redirect to the profile page of the created profile."""
+
+        return reverse('show_profile', kwargs={'pk': self.object.pk})
+    
+
+class FollowView(CheckLogin, TemplateView):
+    """Follow another profile"""
+
+    def dispatch(self, request, *args, **kwargs):
+        
+        if not request.user.is_authenticated:
+            return redirect('login')
+        
+        pk = self.kwargs['pk']
+        follower = self.get_my_profile()
+        target_profile = get_object_or_404(Profile, pk=pk)
+
+        if target_profile != follower: 
+            Follow.objects.get_or_create(
+                profile=target_profile,
+                follower_profile=follower
+            )
+
+        return redirect('show_profile', pk=target_profile.pk)
+    
+class UnfollowView(CheckLogin, TemplateView):
+    """Unfollow another profile"""
+
+    def dispatch(self, request, *args, **kwargs):
+        
+        if not request.user.is_authenticated:
+            return redirect('login')
+        
+        pk = self.kwargs['pk']
+        follower = self.get_my_profile()
+        target_profile = get_object_or_404(Profile, pk=pk)
+
+        Follow.objects.filter(
+            profile=target_profile,
+            follower_profile=follower
+        ).delete()
+
+        return redirect('show_profile', pk=target_profile.pk)
+    
+class LikePostView(CheckLogin, TemplateView):
+    """Like a post"""
+
+    def dispatch(self, request, *args, **kwargs):
+        
+        pk = self.kwargs['pk']
+        profile = self.get_my_profile()
+        post = get_object_or_404(Post, pk=pk)
+
+        if post.profile != profile:
+            Like.objects.get_or_create(
+                post=post,
+                profile=profile
+            )
+
+        return redirect('show_post', pk=post.pk)
+    
+
+class UnlikePostView(CheckLogin, TemplateView):
+    """Unlike a post"""
+
+    def dispatch(self, request, *args, **kwargs):
+
+        pk = self.kwargs['pk']
+        profile = self.get_my_profile()
+        post = get_object_or_404(Post, pk=pk)
+
+        Like.objects.filter(
+            post=post,
+            profile=profile
+        ).delete()
+
+        return redirect('show_post', pk=post.pk)
+
 
 
