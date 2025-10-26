@@ -47,12 +47,16 @@ Description: This is the singular profile template for the mini_insta app.
 
         <!-- If it's another autheticated user they'll see the follow and unfollow button instead -->
         {% if request.user.is_authenticated and profile.user != request.user %}
+
+            <!-- check if the current user is following the profile if they are 
+             the button will say "unfollow" -->
             {% if is_following %}
                 <form action="{% url 'delete_follow' profile.pk %}" method="post" style="display:inline;">
                     {% csrf_token %}
                     <button type="submit" class="primary buttons">Unfollow</button>
                 </form>
 
+            <!-- else the button will say "follow" -->
             {% else %}
                 <form action="{% url 'follow' profile.pk %}" method="post" style="display:inline;">
                     {% csrf_token %}

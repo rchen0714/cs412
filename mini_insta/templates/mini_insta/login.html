@@ -1,3 +1,9 @@
+<!-- 
+File: login.html
+Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+Description: this template is the login page for the mini_insta app.
+It displays a login form and the ability to register a new account.
+-->
 
 {% extends 'mini_insta/base.html' %}
 
@@ -26,6 +32,7 @@
 
 <hr>
 
+<!-- Allow for the option to register if the user does not have an account -->
 <p>
     Don't have an account? 
     <form action="{% url 'create_profile' %}" method="get" style="display: inline;">

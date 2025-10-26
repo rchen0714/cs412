@@ -48,9 +48,14 @@ class ProfileDetailView(CheckLogin, DetailView):
             return None
         
     def get_context_data(self, **kwargs):
+
+        #use the super method to get the existing context
         context = super().get_context_data(**kwargs)
+
+        #add the current profile instance 
         context['profile'] = self.get_object()
 
+        # If logged in, check whether the user is following the target profile
         if self.request.user.is_authenticated:
             user = self.get_my_profile()
             target_profile = self.object
@@ -68,8 +73,11 @@ class PostDetailView(DetailView):
     context_object_name = "post"
 
     def get_context_data(self, **kwargs):
+
+        #use the super method to get the existing context
         context = super().get_context_data(**kwargs)
 
+        # If logged in, check whether the user has liked the post
         if self.request.user.is_authenticated:
             user = Profile.objects.get(user=self.request.user)
             context['is_liked'] = self.object.check_liked_by(user)
@@ -315,76 +323,108 @@ class CreateProfileView(CreateView):
     
 
 class FollowView(CheckLogin, TemplateView):
-    """Follow another profile"""
+    """Allows a logged-in user to follow a target profile. Also double checks
+    that the user is logged in before allowing them to follow another profile."""
 
     def dispatch(self, request, *args, **kwargs):
         
+        #checks the authentication of the user. If the user is not logged in, 
+        #redirect them to the login page.
+
         if not request.user.is_authenticated:
             return redirect('login')
         
+        # Retrieve the Profile object of the logged-in user
+        # and the target profile to be followed.
+
         pk = self.kwargs['pk']
         follower = self.get_my_profile()
         target_profile = get_object_or_404(Profile, pk=pk)
 
+        # Prevent users from following themselves
         if target_profile != follower: 
+
+            # Create a follow relationship
             Follow.objects.get_or_create(
                 profile=target_profile,
                 follower_profile=follower
             )
-
+        #redirect back to the target profile page afterwards 
         return redirect('show_profile', pk=target_profile.pk)
     
 class UnfollowView(CheckLogin, TemplateView):
-    """Unfollow another profile"""
+    """Allows a logged-in user to unfollow a target profile. 
+    Also double checks that the user is logged in before allowing them to unfollow another profile."""
 
     def dispatch(self, request, *args, **kwargs):
         
+        #checks the authentication of the user. If the user is not logged in, 
+        #redirect them to the login page.
+
         if not request.user.is_authenticated:
             return redirect('login')
         
+        # retrieve the Profile object of the logged-in user
+        # and the target profile to be unfollowed.
+
         pk = self.kwargs['pk']
         follower = self.get_my_profile()
         target_profile = get_object_or_404(Profile, pk=pk)
 
+        # prevent users from unfollowing themselves
+        # remove any follow relationship that matches both users
+        
         Follow.objects.filter(
             profile=target_profile,
             follower_profile=follower
         ).delete()
 
+        #redirect back to the target profile page afterwards 
         return redirect('show_profile', pk=target_profile.pk)
     
 class LikePostView(CheckLogin, TemplateView):
-    """Like a post"""
+    """Allows a logged-in user to like a post."""
 
     def dispatch(self, request, *args, **kwargs):
-        
+
+        # retrieve the Profile object of the logged-in user
+        # and the target post to be liked.
+
         pk = self.kwargs['pk']
         profile = self.get_my_profile()
         post = get_object_or_404(Post, pk=pk)
 
+        # prevent users from liking their own posts
         if post.profile != profile:
+            # create a like relationship
             Like.objects.get_or_create(
                 post=post,
                 profile=profile
             )
 
+        # redirect back to the post afterwards
         return redirect('show_post', pk=post.pk)
     
 
 class UnlikePostView(CheckLogin, TemplateView):
-    """Unlike a post"""
+    """Allows a logged-in user to unlike a post."""
 
     def dispatch(self, request, *args, **kwargs):
+
+        # retrieve the Profile object of the logged-in user
+        # and the target post to be unliked.
 
         pk = self.kwargs['pk']
         profile = self.get_my_profile()
         post = get_object_or_404(Post, pk=pk)
 
+        # remove any like relationship that matches both the user and the post
         Like.objects.filter(
             post=post,
             profile=profile
         ).delete()
 
+        # redirect back to the post afterwards
         return redirect('show_post', pk=post.pk)
 
 

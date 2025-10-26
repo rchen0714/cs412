@@ -30,6 +30,7 @@ class UpdatePostForm(forms.ModelForm):
         fields = ['caption']
 
 class CreateProfileForm(forms.ModelForm):
+    """Creates a new profile for a new user."""
     class Meta:
         model = Profile
         fields = ['username', 'display_name', 'bio_text', 'profile_image_url']

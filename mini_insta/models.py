@@ -16,7 +16,7 @@ class Profile(models.Model):
     display_name = models.TextField(blank=True)
     bio_text = models.TextField(blank=True)
     join_date = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE) ## NEW
+    user = models.ForeignKey(User, on_delete=models.CASCADE) ## NEW user foreign key
 
     profile_image_url = models.URLField(blank=True)
 
@@ -78,7 +78,9 @@ class Profile(models.Model):
     def check_following(self, target_profile):
         '''Check if this profile is following the target_profile'''
         
-        is_following = Follow.objects.filter(profile=target_profile, follower_profile=self).exists()
+        is_following = Follow.objects.filter(
+            profile=target_profile, 
+            follower_profile=self).exists()
         return is_following
 
 
@@ -118,7 +120,9 @@ class Post(models.Model):
     def check_liked_by(self, profile):
         '''Check if this post is liked by the given profile'''
         
-        is_liked = Like.objects.filter(post=self, profile=profile).exists()
+        is_liked = Like.objects.filter(
+            post=self, 
+            profile=profile).exists()
         return is_liked
    
 class Photo(models.Model):

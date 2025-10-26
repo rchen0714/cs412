@@ -24,7 +24,7 @@ Description: This is the base template for the mini_insta app.
         <nav>
             <ul>
 
-                 <!-- Public link for all profiles  -->
+                 <!-- Public link for all visitors -->
                 <li><a href="{% url 'show_all_profiles' %}">Show All</a></li>
                 
 
@@ -52,6 +52,10 @@ Description: This is the base template for the mini_insta app.
 
              <hr>
 
+            <!-- Check if the current user is authenticated 
+             if they are then display their user, if not then 
+             display a message saying htey're not logged in-->
+
             {% if request.user.is_authenticated %}
                 Logged in as: {{ request.user }}.
             {% else %}
@@ -74,12 +78,13 @@ Description: This is the base template for the mini_insta app.
         <footer>
             <p>&#169 Ruby Chen 2025. All rights reserved</p>
 
-            <!-- Show All Profiles  -->
+             <!-- Public link for all visitors -->
             <p><a href="{% url 'show_all_profiles' %}">All Profiles</a></p>
 
+            <!-- URLs for logged in users only -->
+             
             {% if request.user.is_authenticated %}
-                <!-- URLs for logged in users only -->
-
+            
                 <!-- Profile home feed -->
                 <p>
                     <a href="{% url 'show_feed' %}">Home Feed</a>
