@@ -4,6 +4,11 @@
 
 from importlib.resources import files
 import profile
+from .mixins import CheckLogin
+from django.contrib.auth.forms import UserCreationForm ## NEW
+from django.contrib.auth.models import User ## NEW
+from django.contrib.auth import login # NEW
+
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -11,6 +16,8 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from mini_insta.forms import CreatePostForm, UpdateProfileForm, UpdatePostForm
 from .models import Photo, Post, Profile
 from django.db.models import Q
+
+
 
 
 # Create your views here.
@@ -22,12 +29,23 @@ class ProfileListView(ListView):
     template_name = "mini_insta/show_all_profile.html"
     context_object_name = "profiles"
 
-class ProfileDetailView(DetailView):
+class ProfileDetailView(CheckLogin, DetailView):
     '''Display a single profile'''
 
     model = Profile
     template_name = "mini_insta/show_profile.html"
     context_object_name = "profile" 
+
+    def get_object(self):
+        '''Return the profile object for the currently logged-in user.'''
+        if 'pk' in self.kwargs:
+            return super().get_object()
+        
+        if self.request.user.is_authenticated:
+            return self.get_my_profile()
+        
+        else:
+            return None
 
 class PostDetailView(DetailView):
     '''Display a single post'''
@@ -37,7 +55,7 @@ class PostDetailView(DetailView):
     context_object_name = "post"
 
 
-class CreatePostView(CreateView):
+class CreatePostView(CheckLogin, CreateView):
     '''Define a view class to create a new comment on an article'''
 
     model = Post
@@ -48,18 +66,14 @@ class CreatePostView(CreateView):
         '''Defines where to redirect the user after successfully creating
         a new post.'''
 
-        pk = self.object.profile.pk
+        pk = self.object.pk
         return reverse('show_post', kwargs={'pk': pk})
     
-    def get_context_data(self):
+    def get_context_data(self, **kwargs):
 
         '''Defines and adds any extra context variables'''
-        context = super().get_context_data()
-
-        pk = self.kwargs['pk']
-        profile = Profile.objects.get(pk=pk)
-
-        context['profile'] = profile
+        context = super().get_context_data(**kwargs)
+        context['profile'] = self.get_my_profile()
         return context
     
     def form_valid(self, form):
@@ -67,72 +81,84 @@ class CreatePostView(CreateView):
 
         print(form.cleaned_data)
 
-        pk = self.kwargs['pk']
-        profile = Profile.objects.get(pk=pk)
-
         post = form.save(commit=False)
-        post.profile = profile
+        post.profile = self.get_my_profile()
         post.save()
 
-        form.instance.profile = profile
+        form.instance.profile = self.get_my_profile()
 
         files = self.request.FILES.getlist('files')
         for file in files:
             Photo.objects.create(post=post, image_file=file)
+        
         response = super().form_valid(form)
 
         return response
-    
-class UpdateProfileView(UpdateView):
+
+class UpdateProfileView(CheckLogin, UpdateView):
     """Edit an already previously existing profile"""
     model = Profile
     form_class = UpdateProfileForm
     template_name = "mini_insta/update_profile_form.html"
 
+    def get_object(self):
+        """Return the profile object for the currently logged-in user."""
+        return self.get_my_profile()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post = self.get_object()
+        context["profile"] = post.profile 
+        return context
+    
+    def get_success_url(self):
+        """Redirect to the profile page of the updated profile."""
+        return reverse('show_profile', kwargs={'pk': self.get_my_profile().pk})
 
-class DeletePostView(DeleteView):
+
+class DeletePostView(CheckLogin, DeleteView):
     """Delete a post"""
     model = Post
     template_name = "mini_insta/delete_post_form.html"
     context_object_name = "post"
 
+    def get_queryset(self):
+        """Limit deletion to posts owned by the logged-in user."""
+        return Post.objects.filter(profile=self.get_my_profile())
+    
     def get_context_data(self, **kwargs):
-        """Provide post and profile to the template."""
         context = super().get_context_data(**kwargs)
-
         post = self.get_object()
 
         context["post"] = post
-        context['profile'] = post.profile
-
+        context["profile"] = post.profile 
         return context
 
     def get_success_url(self):
         """Redirect to the profile page of the deleted post."""
-        post = self.get_object()
-        return reverse('show_profile', kwargs={'pk': post.profile.pk})
-    
-class UpdatePostView(UpdateView):
+        return reverse('show_profile')
+
+class UpdatePostView(CheckLogin, UpdateView):
     """Edit an already previously existing post"""
     model = Post
     form_class = UpdatePostForm
     template_name = "mini_insta/update_post_form.html"
 
+    def get_queryset(self):
+        """Limit updates to posts owned by the logged-in user."""
+        return Post.objects.filter(profile=self.get_my_profile())
+    
     def get_context_data(self, **kwargs):
-        """Provide post and profile to the template."""
         context = super().get_context_data(**kwargs)
-
         post = self.get_object()
 
         context["post"] = post
-        context['profile'] = post.profile
-
+        context["profile"] = post.profile 
         return context
 
     def get_success_url(self):
         """Redirect to the post page of the updated post."""
-        post = self.get_object()
-        return reverse('show_post', kwargs={'pk': post.pk})
+        return reverse('show_post', kwargs={'pk': self.object.pk})
     
 #Views for Following 
 
@@ -150,7 +176,7 @@ class ShowFollowingDetailView(DetailView):
     template_name = "mini_insta/show_following.html"
     context_object_name = "profile"
 
-class PostFeedListView(ListView):
+class PostFeedListView(CheckLogin, ListView):
     '''A view class that shows the post feed for a specific profile'''
 
     model = Post
@@ -160,32 +186,27 @@ class PostFeedListView(ListView):
     def get_queryset(self):
         '''Return the list of posts for this profile's feed'''
 
-        pk = self.kwargs['pk']
-        profile = Profile.objects.get(pk=pk)
+        profile = self.get_my_profile()
         feed = profile.get_post_feed()
         return feed
     
-    def get_context_data(self):
+    def get_context_data(self, **kwargs):
         '''Defines and adds any extra context variables'''
-        context = super().get_context_data()
+        context = super().get_context_data(**kwargs)
 
-        pk = self.kwargs['pk']
-        profile = Profile.objects.get(pk=pk)
-
-        context['profile'] = profile
+        context['profile'] = self.get_my_profile()
         return context
     
-class SearchView(ListView):
+class SearchView(CheckLogin, ListView):
     '''Search across specific profiles and posts based on a text query'''
 
     template_name = "mini_insta/search_results.html"
     context_object_name = "profiles"
 
     def dispatch(self, request, *args, **kwargs):
+        '''If no search query is provided, render the search page without results'''
         if 'q' not in self.request.GET:
-            pk = self.kwargs['pk']
-            profile = Profile.objects.get(pk=pk)
-            return render(request, "mini_insta/search.html", {"profile": profile})
+            return render(request, "mini_insta/search.html", {"profile": self.get_my_profile()})
 
         return super().dispatch(request, *args, **kwargs)
     
@@ -197,16 +218,19 @@ class SearchView(ListView):
         if not query:
             return Profile.objects.none()
         
-        post_matches = Post.objects.filter(caption__icontains=query).order_by('-timestamp')
-
-        return post_matches
+        profiles = Profile.objects.filter(
+            Q(username__icontains=query) |
+            Q(display_name__icontains=query) |
+            Q(bio_text__icontains=query)
+        )
+        
+        return profiles
     
     def get_context_data(self, **kwargs):
         '''returns a dictionary of all the context data from the template'''
-        context = super().get_context_data()
+        context = super().get_context_data(**kwargs)
 
-        pk = self.kwargs['pk'] 
-        profile = Profile.objects.get(pk=pk)
+        profile = self.get_my_profile()
         query = self.request.GET.get('q', '')
 
         if query:

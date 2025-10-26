@@ -37,12 +37,15 @@ Description: This is the singular post template for the mini_insta app.
             <p><strong>@{{ post.profile.username }}</strong>: {{ post.caption }}</p>
             <p>Posted on {{ post.timestamp }}</p>
 
+            {% if request.user.is_authenticated and post.profile.user == request.user %}
             <form action="{% url 'update_post' post.pk %}" method="get" style="display:inline;">
                     <button type="submit" class="primary buttons">Update</button>
             </form>
             <form action="{% url 'delete_post' post.pk %}" method="get" style="display:inline;">
                     <button type="submit" class="primary buttons">Delete</button>
             </form>
+            {% endif %}
+            
         </div>
 
         <hr>

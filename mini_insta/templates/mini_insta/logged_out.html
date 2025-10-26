@@ -1,0 +1,18 @@
+
+{% extends 'mini_insta/base.html' %}
+
+
+{% block content %}
+
+<h3>You are now logged out</h3>
+
+
+<form action="{% url 'login' %}" method="get" style="display:inline;">
+    <button type="submit" class="primary buttons">Log in again</button>
+</form>
+
+<form action="{% url 'show_all_profiles' %}" method="get">
+    <button type="submit" class="primary buttons">Back to All Profiles</button>
+</form>
+
+{% endblock %}

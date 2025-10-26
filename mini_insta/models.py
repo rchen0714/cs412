@@ -4,6 +4,7 @@
 
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -15,6 +16,7 @@ class Profile(models.Model):
     display_name = models.TextField(blank=True)
     bio_text = models.TextField(blank=True)
     join_date = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE) ## NEW
 
     profile_image_url = models.URLField(blank=True)
 

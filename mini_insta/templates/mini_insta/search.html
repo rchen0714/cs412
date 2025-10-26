@@ -14,7 +14,7 @@ search functionality
     <p>Enter a keyword to find matching users or posts.</p>
 
     <!-- form submits as a GET request to a search query -->
-    <form action="{% url 'search' profile.pk %}" method="get">
+    <form action="{% url 'search'  %}" method="get">
         <label for="search-box">Search:</label><br>
         <input type="text" id="search-box" name="q">
         <button type="submit">Search</button>

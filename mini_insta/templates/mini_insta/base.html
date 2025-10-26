@@ -23,14 +23,40 @@ Description: This is the base template for the mini_insta app.
 
         <nav>
             <ul>
+
+                 <!-- Public link for all profiles  -->
                 <li><a href="{% url 'show_all_profiles' %}">Show All</a></li>
-                {% if profile %}
-                    <li><a href="{% url 'show_feed' profile.pk %}">Home Feed</a></li>
-                    <li><a href="{% url 'create_post' profile.pk %}">Create Post</a></li>
-                    <li><a href="{% url 'show_profile' profile.pk %}">My Profile</a></li>
-                    <li><a href="{% url 'search' profile.pk %}">Search</a></li>
+                
+
+                 <!-- URLs for logged in users only -->
+                {% if request.user.is_authenticated %}
+                    <li><a href="{% url 'show_feed' %}">Home Feed</a></li>
+                    <li><a href="{% url 'create_post' %}">Create Post</a></li>
+                    <li><a href="{% url 'show_user_profile' %}">My Profile</a></li>
+                    <li><a href="{% url 'search' %}">Search</a></li>
+
+                    <li>
+                        <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit">Log out</button>
+                        </form>
+                    </li>   
+
+                <!-- URLs for users who are not logged in -->
+                {% else %}
+                <li><a href="{% url 'login' %}">Log in</a></li>
+
                 {% endif %}
             </ul>
+
+             <hr>
+
+            {% if request.user.is_authenticated %}
+                Logged in as: {{ request.user }}.
+            {% else %}
+                Not logged in.
+            {% endif %}
+            
         </nav>
         
     
@@ -49,27 +75,29 @@ Description: This is the base template for the mini_insta app.
 
             <!-- Show All Profiles  -->
             <p><a href="{% url 'show_all_profiles' %}">All Profiles</a></p>
-            {% if profile %}
 
-            <!-- Profile home feed -->
-            <p>
-                <a href="{% url 'show_feed' profile.pk %}">Home Feed</a>
-            </p>
+            {% if request.user.is_authenticated %}
+                <!-- URLs for logged in users only -->
 
-            <!-- Create Post  -->
-            <p>
-                <a href="{% url 'create_post' profile.pk %}">Create Post</a>
-            </p>
-            
-            <!-- Nav to user Profile  -->
-            <p>
-                <a href="{% url 'show_profile' profile.pk %}">My Profile</a>
-            </p>
+                <!-- Profile home feed -->
+                <p>
+                    <a href="{% url 'show_feed' %}">Home Feed</a>
+                </p>
 
-            <!--Search Functionality -->
-             <p>
-                <a href="{% url 'search' profile.pk %}">Search</a>
-            </p>
+                <!-- Create Post  -->
+                <p>
+                    <a href="{% url 'create_post' %}">Create Post</a>
+                </p>
+                
+                <!-- Nav to user Profile  -->
+                <p>
+                    <a href="{% url 'show_user_profile' %}">My Profile</a>
+                </p>
+
+                <!--Search Functionality -->
+                <p>
+                    <a href="{% url 'search' %}">Search</a>
+                </p>
 
 
             {% endif %}
