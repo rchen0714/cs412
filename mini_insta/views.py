@@ -144,7 +144,8 @@ class UpdateProfileView(CheckLogin, UpdateView):
     
     def get_success_url(self):
         """Redirect to the profile page of the updated profile."""
-        return reverse('show_profile', kwargs={'pk': self.get_my_profile().pk})
+        profile = self.get_my_profile()
+        return reverse('show_profile', kwargs={'pk': profile.pk})
 
 
 class DeletePostView(CheckLogin, DeleteView):
@@ -167,7 +168,9 @@ class DeletePostView(CheckLogin, DeleteView):
 
     def get_success_url(self):
         """Redirect to the profile page of the deleted post."""
-        return reverse('show_profile')
+        post = self.get_object()
+        profile = post.profile
+        return reverse('show_profile', kwargs={'pk': profile.pk})
 
 class UpdatePostView(CheckLogin, UpdateView):
     """Edit an already previously existing post"""
@@ -299,19 +302,25 @@ class CreateProfileView(CreateView):
     def form_valid(self, form):
         '''Called when a valid form is submitted.'''
 
+        # create a new user account using djangos built-in method 
         user_form = UserCreationForm(self.request.POST)
         
+        # if the user is valid, save the user and log them in
         if user_form.is_valid():
             user = user_form.save()
         else:
+            # if the user form is not valid, re-render the page with error messages
             return self.render_to_response(
                 self.get_context_data(form=form, user_form=user_form)
             )
 
+        # log the user in
         login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
 
+        # connect the new profile with the newly created user
         form.instance.user = user
 
+        # save the profile instance
         response = super().form_valid(form)
 
         return response
@@ -319,8 +328,9 @@ class CreateProfileView(CreateView):
     def get_success_url(self):
         """Redirect to the profile page of the created profile."""
 
-        return reverse('show_profile', kwargs={'pk': self.object.pk})
-    
+        profile = self.object
+        return reverse('show_profile', kwargs={'pk': profile.pk})
+
 
 class FollowView(CheckLogin, TemplateView):
     """Allows a logged-in user to follow a target profile. Also double checks
