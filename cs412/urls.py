@@ -31,7 +31,9 @@ urlpatterns = [
     path('formdata/', include('formdata.urls')),
     path('restaurant/', include('restaurant.urls')),
     path('blog/', include('blog.urls')),
-    path('mini_insta/', include('mini_insta.urls')), #NEW
+    path('mini_insta/', include('mini_insta.urls')),
+    path('marathon_analytics/', include('marathon_analytics.urls')), 
+    path('voter_analytics/', include('voter_analytics.urls')), #NEW
 ] 
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
