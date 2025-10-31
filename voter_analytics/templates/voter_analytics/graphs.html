@@ -1,0 +1,39 @@
+{% extends 'voter_analytics/base.html' %}
+{% block content %}
+
+<div class="graph-wrapper">
+    <h1>Graphs</h1>
+
+    <div class="filter">
+        {% include "voter_analytics/filtering_form.html" %}
+    </div>
+
+    <br>
+
+
+    <!-- # show the Histogram here: -->
+    <div class="chart">
+        <div class="row">
+            <!-- safe: render the HTML rather than display the HTML as text -->
+            {{graph_div_birth|safe}} 
+        </div>
+    </div>
+
+    <!-- # show the pie chart here: -->
+    <div class="chart">
+        <div class="row">
+            <!-- safe: render the HTML rather than display the HTML as text -->
+            {{graph_div_party|safe}} 
+        </div>
+    </div>
+
+    <!-- # show the bar chart here: -->
+    <div class="chart">
+        <div class="row">
+            <!-- safe: render the HTML rather than display the HTML as text -->
+            {{graph_div_elections|safe}} 
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,79 @@
+<!-- voter_analytics/templates/voter_analytics/filter_form.html -->
+<h3>Voter Filter Form</h3>
+
+<table>
+<form action="{% url form_action %}" method="get">
+
+    <!-- Party affiliation -->
+    <tr>
+        <th>Party Affiliation:</th>
+        <td>
+            <select name="party">
+                <option value="">All</option>
+                <option value="D">Democrat (D)</option>
+                <option value="R">Republican (R)</option>
+                <option value="U">Unaffiliated (U)</option>
+                <option value="O">Other (O)</option>
+            </select>
+        </td>
+    </tr>
+
+    <!-- Min birth year -->
+    <tr>
+        <th>Born After (Year):</th>
+        <td>
+            <select name="min_year">
+                <option value="">--</option>
+                {% for y in years %}
+                    <option value="{{ y }}">{{ y }}</option>
+                {% endfor %}
+            </select>
+        </td>
+    </tr>
+
+    <!-- Max birth year -->
+    <tr>
+        <th>Born Before (Year):</th>
+        <td>
+            <select name="max_year">
+                <option value="">--</option>
+                {% for y in years %}
+                    <option value="{{ y }}">{{ y }}</option>
+                {% endfor %}
+            </select>
+        </td>
+    </tr>
+
+    <!-- Voter Score -->
+    <tr>
+        <th>Voter Score:</th>
+        <td>
+            <select name="score">
+                <option value="">All</option>
+                {% for s in scores %}
+                    <option value="{{ s }}">{{ s }}</option>
+                {% endfor %}
+            </select>
+        </td>
+    </tr>
+
+    <!-- Election participation checkboxes -->
+    <tr>
+        <th>Voted In:</th>
+        <td>
+            <label><input type="checkbox" name="v20state"> 2020 State</label><br>
+            <label><input type="checkbox" name="v21town"> 2021 Town</label><br>
+            <label><input type="checkbox" name="v21primary"> 2021 Primary</label><br>
+            <label><input type="checkbox" name="v22general"> 2022 General</label><br>
+            <label><input type="checkbox" name="v23town"> 2023 Town</label><br>
+        </td>
+    </tr>
+
+    <!-- Submit button -->
+    <tr>
+        <td><input type="submit" value="Filter"></td>
+        <td></td>
+    </tr>
+
+</form>
+</table>
