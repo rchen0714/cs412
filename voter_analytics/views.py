@@ -18,12 +18,12 @@ class VoterListView(ListView):
     paginate_by = 100
     
     def get_queryset(self):
+        """Return filtered queryset based on GET parameters."""
         
         # start with entire queryset
-        all_voters = super().get_queryset().order_by('last_name', 'first_name')
+        all_voters = Voter.objects.all()
  
         # Filtering fields 
-
         party = self.request.GET.get('party')
 
         if party:
@@ -74,7 +74,7 @@ class VoterDetailView(DetailView):
     context_object_name = 'v'
 
     def get_context_data(self, **kwargs):
-        """Add Google Maps link to context."""
+        """Return context variables and adds a Google Maps link to context."""
         
         context = super().get_context_data(**kwargs)
         v = context['v']
@@ -92,6 +92,7 @@ class VoterGraphsView(TemplateView):
     context_object_name = 'v'
 
     def get_queryset(self):
+        """Return filtered queryset based on GET parameters."""
         
         all_voters = Voter.objects.all()
 
@@ -119,6 +120,8 @@ class VoterGraphsView(TemplateView):
         return all_voters
 
     def get_context_data(self, **kwargs):
+        """Gets context variables and generates Plotly graphs."""
+        
         context = super().get_context_data(**kwargs)
         filtered_voters = self.get_queryset()
 

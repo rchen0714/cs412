@@ -1,21 +1,34 @@
+<!-- 
+File: voter_analytics/templates/voter_analytics/graphs.html
+Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+Description: this template displays the graphs for the voter analytics app.
+It includes the filtering form and the various graphs based on the filtered data.
+-->
+
 {% extends 'voter_analytics/base.html' %}
 
 {% block content %}
 <div class="voter-detail">
 
-    <h1>Voter Details for {{ v.first_name }} {{ v.last_name }}</h1>
+    <!-- Display of all voter information from the model  -->
+
+    <!-- Name -->
+    <h3>Voter Details for {{ v.first_name }} {{ v.last_name }}</h3>
 
     <table>
+        <!-- ID -->
         <tr>
             <th>Voter ID</th>
             <td>{{ v.voter_id }}</td>
         </tr>
 
+        <!-- Name -->
         <tr>
             <th>Name</th>
             <td>{{ v.first_name }} {{ v.last_name }}</td>
         </tr>
 
+        <!-- Address -->
         <tr>
             <th>Street Address</th>
             <td>
@@ -28,31 +41,37 @@
             </td>
         </tr>
 
+        <!-- Date of Birth -->
         <tr>
             <th>Date of Birth</th>
             <td>{{ v.date_of_birth|date:"Y-m-d" }}</td>
         </tr>
 
+        <!-- Registration Date -->
         <tr>
             <th>Date of Registration</th>
             <td>{{ v.date_of_registration|date:"Y-m-d" }}</td>
         </tr>
 
+        <!-- Party Affiliation -->
         <tr>
             <th>Party Affiliation</th>
             <td>{{ v.party_affiliation }}</td>
         </tr>
 
+        <!-- Precinct -->
         <tr>
             <th>Precinct</th>
             <td>{{ v.precinct_number }}</td>
         </tr>
 
+        <!-- Voter Score -->
         <tr>
             <th>Voter Score</th>
             <td>{{ v.voter_score }}</td>
         </tr>
 
+        <!-- Election Participation -->
         <tr>
             <th>Voted in 2020 State?</th>
             <td>{{ v.v20state }}</td>

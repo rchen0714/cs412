@@ -1,3 +1,10 @@
+<!-- 
+File: voter_analytics/templates/voter_analytics/base.html
+Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+Description: this template is the base layout for the voter analytics app.
+-->
+
+
 <!-- voter_analytics/templates/voter_analytics/base.html -->
 {% load static %}
 <html>
@@ -8,6 +15,8 @@
     <body>
         <header>
             <h1>Voter Analytics</h1>
+
+            <!-- Navigation to Home and Graph -->
             <nav>
                 <ul>
                     <li><a href="{% url 'home' %}">Home</a></li>
