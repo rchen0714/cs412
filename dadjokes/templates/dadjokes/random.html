@@ -1,0 +1,24 @@
+{% extends 'dadjokes/base.html' %}
+
+{% block content %}
+
+<h3>Random Dad Joke with Usagi</h3>
+
+<main class="grid-container">
+
+    <article>
+        <h2>Dad Joke of the Moment</h2>
+        <p>{{ joke.text }}</p>
+        <p><em>— {{ joke.contributor }}</em></p>
+
+         <img src="{{ picture.image_url }}" alt="Usagi from Chiikawa" width="300">
+
+        <p><em>Added by {{ picture.contributor }}</em></p>
+        <hr>
+    </article>
+
+</main>
+
+<a href="{% url 'random' %}">Show Another Quote!</a>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'dadjokes/base.html' %}
+
+{% block content %}
+
+<h3>Gallery of All Dad Jokes</h3>
+
+<main class="grid-container">
+
+    {% for joke in jokes %}
+
+    <article>
+        <div>
+            <h3>Joke #{{ joke.pk }}</h3>
+            <p>{{ joke.text }}</p>
+            <p><em>Created by {{ joke.contributor }} at {{ joke.timestamp }}</em></p>
+        </div>
+
+        <a href="{% url 'joke' joke.pk %}">
+            <h3>View Joke</h3>
+        </a>
+
+        <hr>
+    </article>
+
+    {% endfor %}
+
+</main>
+
+{% endblock %}

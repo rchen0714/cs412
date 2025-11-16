@@ -1,0 +1,19 @@
+{% extends 'dadjokes/base.html' %}
+
+{% block content %}
+
+<h3>Usagi Picture #{{ picture.pk }}</h3>
+
+<main class="grid-container">
+
+    <article>
+        <img src="{{ picture.image_url }}" alt="Usagi from Chiikawa" width="400">
+        <p><em>— Uploaded by {{ picture.contributor }} at {{ picture.timestamp }}</em></p>
+        <hr>
+    </article>
+
+</main>
+
+<a href="{% url 'pictures' %}">Back to All Pictures</a>
+
+{% endblock %}

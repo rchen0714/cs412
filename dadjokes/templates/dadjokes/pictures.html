@@ -1,0 +1,25 @@
+{% extends 'dadjokes/base.html' %}
+
+{% block content %}
+
+<h3>All Usagi Pictures</h3>
+
+<main class="grid-container">
+
+    {% for picture in pictures %}
+    <article>
+        <div>
+            <img src="{{ picture.image_url }}" alt="Usagi from Chiikawa" width="200">
+            <p><em>Uploaded by {{ picture.contributor }} at {{ picture.timestamp }}</em></p>
+        </div>
+
+        <a href="{% url 'picture' picture.pk %}">
+            <h3>View Picture</h3>
+        </a>
+        <hr>
+    </article>
+    {% endfor %}
+
+</main>
+
+{% endblock %}

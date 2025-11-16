@@ -1,0 +1,26 @@
+{% load static %}
+<html>
+<head>
+    <title>Dad Jokes with Usagi</title>
+    <link rel="stylesheet" href="{% static 'styles-dadjokes.css' %}">
+</head>
+
+<body>
+
+<header>
+    <h1>Dad Jokes with Usagi</h1>
+    <nav>
+        <ul>
+            <li><a href="{% url 'random' %}">Random</a></li>
+            <li><a href="{% url 'jokes' %}">Jokes</a></li>
+            <li><a href="{% url 'pictures' %}">Pictures</a></li>
+        </ul>
+    </nav>
+</header>
+
+{% block content %}
+{% endblock %}
+
+</body>
+</html>
+ 
