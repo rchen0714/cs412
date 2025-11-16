@@ -1,10 +1,19 @@
+<!-- 
+File: dadjokes/templates/dadjokes/pictures.html
+Author: Ruby Chen (rc071404@bu.edu)
+Date: 11/16/2025
+Description: Displays a list of all uploaded dad joke pictures.
+-->
+
 {% extends 'dadjokes/base.html' %}
 
 {% block content %}
 
 <h3>All Usagi Pictures</h3>
 
-<main class="grid-container">
+<main class="full-lists-container">
+
+    <!-- loop through all picture instances and list them out with their details -->
 
     {% for picture in pictures %}
     <article>
@@ -13,8 +22,9 @@
             <p><em>Uploaded by {{ picture.contributor }} at {{ picture.timestamp }}</em></p>
         </div>
 
-        <a href="{% url 'picture' picture.pk %}">
-            <h3>View Picture</h3>
+        <!-- link to specific picture instance detail page -->
+        <a class="button" href="{% url 'picture' picture.pk %}">
+            <p>View Picture</p>
         </a>
         <hr>
     </article>

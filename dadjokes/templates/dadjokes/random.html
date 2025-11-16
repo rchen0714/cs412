@@ -1,3 +1,10 @@
+<!-- 
+File: dadjokes/templates/dadjokes/random.html
+Author: Ruby Chen (rc071404@bu.edu)
+Date: 11/16/2025
+Description: Shows one random dad joke and one random Usagi picture 
+-->
+
 {% extends 'dadjokes/base.html' %}
 
 {% block content %}
@@ -7,7 +14,6 @@
 <main class="grid-container">
 
     <article>
-        <h2>Dad Joke of the Moment</h2>
         <p>{{ joke.text }}</p>
         <p><em>— {{ joke.contributor }}</em></p>
 
@@ -19,6 +25,7 @@
 
 </main>
 
-<a href="{% url 'random' %}">Show Another Quote!</a>
+<!-- link to refresh for another random joke and picture -->
+<a class="button" href="{% url 'random' %}">Show Another Quote!</a>
 
 {% endblock %}

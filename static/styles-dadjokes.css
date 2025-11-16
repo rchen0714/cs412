@@ -41,7 +41,7 @@ nav a{
 }
 
 body{
-    margin: 5% 0 0 18%;
+    margin: 5% 0 7% 18%;
     font-family: poppins, sans-serif;
     display: flex;
     background-color: #FFFCF7;
@@ -66,4 +66,39 @@ h3{
     font-size: calc(7px + 1vw);
     color: #8B6449;
     margin: 1% 0;
+}
+
+article {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin: 3% 0;
+}
+
+.button{
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: calc(3px + 1vw);
+    font-weight: 500;
+    color: white;
+    background-color: #8B6449;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    text-align: center;
+    margin-top: 2%;
+}
+
+.full-lists-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 5%;
 }

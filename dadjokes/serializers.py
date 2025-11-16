@@ -1,3 +1,12 @@
+"""
+File: dadjokes/serializers.py
+Author: Ruby Chen (rc071404@bu.edu)
+Date: 11/16/2025
+Description: Django REST Framework serializers for converting Joke and 
+Picture model instances into JSON for API responses and to validate 
+incoming POST data.
+"""
+
 from rest_framework import serializers
 from .models import Joke, Picture
 

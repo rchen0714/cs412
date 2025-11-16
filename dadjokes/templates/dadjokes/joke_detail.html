@@ -1,3 +1,13 @@
+<!-- 
+File: dadjokes/templates/dadjokes/joke_detail.html
+Author: Ruby Chen (rc071404@bu.edu)
+Date: 11/16/2025
+Description: Displays a single dad joke, including text, contributor, 
+and timestamp.
+-->
+
+
+
 {% extends 'dadjokes/base.html' %}
 
 {% block content %}
@@ -5,6 +15,8 @@
 <h3>Joke #{{ joke.pk }}</h3>
 
 <main class="grid-container">
+
+    <!-- Display the specific joke instance  -->
 
     <article>
         <div>
@@ -18,6 +30,7 @@
 
 </main>
 
-<a href="{% url 'jokes' %}">Back to All Jokes</a>
+<!-- link back to all jokes page  -->
+<a class="button" href="{% url 'jokes' %}">Back to All Jokes</a>
 
 {% endblock %}

@@ -1,3 +1,12 @@
+"""
+File: dadjokes/views.py
+Author: Ruby Chen (rc071404@bu.edu)
+Date: 11/16/2025
+Description: Django views for the HTML and api views within 
+the dadjokes application.
+"""
+
+
 from django.shortcuts import render
 
 # Create your views here.

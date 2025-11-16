@@ -1,11 +1,22 @@
+<!-- 
+File: dadjokes/templates/dadjokes/jokes.html
+Author: Ruby Chen (rc071404@bu.edu)
+Date: 11/16/2025
+Description: Displays a listing of all dad jokes with links to  
+individual joke detail pages.
+-->
+
 {% extends 'dadjokes/base.html' %}
 
 {% block content %}
 
 <h3>Gallery of All Dad Jokes</h3>
 
-<main class="grid-container">
+<main class="full-lists-container">
 
+    <!-- loop thorugh all instances of jokes and have them listed out 
+    with their specfic details -->
+    
     {% for joke in jokes %}
 
     <article>
@@ -15,8 +26,9 @@
             <p><em>Created by {{ joke.contributor }} at {{ joke.timestamp }}</em></p>
         </div>
 
-        <a href="{% url 'joke' joke.pk %}">
-            <h3>View Joke</h3>
+        <!-- link to specifc joke instance detail page -->
+        <a class="button" href="{% url 'joke' joke.pk %}">
+            <p>View Joke</p>
         </a>
 
         <hr>

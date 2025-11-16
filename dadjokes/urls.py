@@ -1,10 +1,18 @@
+"""
+File: dadjokes/urls.py
+Author: Ruby Chen (rc071404@bu.edu)
+Date: 11/16/2025
+Description: URL cconfigurations and paths for the dadjokes application. Defines routes 
+for HTML pages as well as all API endpoints 
+"""
+
 from django.urls import path
 from django.contrib import admin
 
 from dadjokes.views import  RandomJokePictureView, JokeListView, JokeDetailView, PictureListView, PictureDetailView
 from dadjokes.views import JokeListAPIView, JokeDetailAPIView, RandomJokeAPIView, PictureListAPIView, PictureDetailAPIView, RandomPictureAPIView
 
-# Define URL patterns for the hw app
+# Define URL patterns for the dadjokes app
 urlpatterns = [
 
     # ----- Regular Views for HTML -----
