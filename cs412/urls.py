@@ -33,8 +33,9 @@ urlpatterns = [
     path('blog/', include('blog.urls')),
     path('mini_insta/', include('mini_insta.urls')),
     path('marathon_analytics/', include('marathon_analytics.urls')), 
-    path('voter_analytics/', include('voter_analytics.urls')), #NEW
-    path('dadjokes/', include('dadjokes.urls')),  # NEW
+    path('voter_analytics/', include('voter_analytics.urls')), 
+    path('dadjokes/', include('dadjokes.urls')),  
+    path('terrier_study/', include('terrier_study.urls')), #NEW
 ] 
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
