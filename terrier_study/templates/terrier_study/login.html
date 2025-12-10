@@ -1,3 +1,10 @@
+<!-- 
+File: login.html
+Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+Description: This is the template for the login page of the terrier_study app.
+Allows user to either login or create an account
+-->
+
 {% extends "terrier_study/base.html" %}
 {% block content %}
 
@@ -8,7 +15,7 @@
     <form action="{% url 'login' %}" method="post">
         {% csrf_token %}
 
-        <div class="form-fields">
+        <div>
             {{ form }}
         </div>
 

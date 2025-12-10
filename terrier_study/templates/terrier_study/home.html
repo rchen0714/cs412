@@ -1,3 +1,10 @@
+<!-- 
+File: home.html
+Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+Description: This is the template for the home page of the terrier_study app.
+It contains a welcome message, filter form, and a map showing study spots.
+-->
+
 {% extends "terrier_study/base.html" %}
 {% load static %}
 
@@ -31,6 +38,7 @@
 
 <script>
 function initMap() {
+    // Initialize the Google Map centered on BU
     const map = new google.maps.Map(document.getElementById("map"), {
         zoom: 14,
         center: { lat: 42.3505, lng: -71.1054 }
@@ -39,25 +47,31 @@ function initMap() {
     // Pass current filter query parameters to the API
     const params = new URLSearchParams(window.location.search);
 
+    //Fetch filtered buildings from Django's API and regular 
+    //Fetch data from the API endpoint cmds
     fetch("/rc071404/terrier_study/api/buildings/?" + params.toString())
         .then(response => response.json())
         .then(data => {
             const buildings = data.results ?? data;
 
+            //error handling for if long or lat dont exist 
             buildings.forEach(b => {
                 if (!b.latitude || !b.longitude) return;
 
+                // Create a marker if the building exists 
                 const marker = new google.maps.Marker({
                     position: { lat: b.latitude, lng: b.longitude },
                     map: map,
                     title: b.name
                 });
 
+                // When clicking a marker, go to that building's detail page
                 marker.addListener("click", () => {
                     window.location.href = `/rc071404/terrier_study/buildings/${b.id}/`;
                 });
             });
         })
+        //error handling for fetch
         .catch(err => console.error("Error loading buildings:", err));
 }
 </script>

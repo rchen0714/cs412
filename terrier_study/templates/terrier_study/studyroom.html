@@ -1,3 +1,10 @@
+<!-- 
+File: studyroom.html
+Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+Description: This is the template for a specific studyroom page of the terrier_study app.
+Gives information about a specific study room, including reviews and favorite status.
+-->
+
 {% extends "terrier_study/base.html" %}
 {% load static %}
 
@@ -5,17 +12,18 @@
 
 <div class="page-wrapper">
 
-    <!-- HEADER -->
     <h2 class="studyroom-title">{{ room.name }}</h2>
 
-    <!-- FAVORITE BUTTON -->
+    <!-- favorite button -->
     <div class="favorite-button">
         {% if is_favorited %}
+            <!-- if its favorited then show remove favorite button -->
             <form action="{% url 'remove-favorite' user_favorite_obj.pk %}" method="post" class="favorite-form">
                 {% csrf_token %}
                 <button type="submit" class="primary-button">Remove from Favorites</button>
             </form>
         {% else %}
+            <!-- if not favorited then show add favorite button -->
             <form action="{% url 'add-favorite' room.pk %}" method="post" class="favorite-form">
                 {% csrf_token %}
                 <button type="submit" class="primary-button">Add to Favorites</button>
@@ -29,7 +37,7 @@
              class="studyroom-image">
     {% endif %}
 
-    <!-- BASIC INFO -->
+    <!-- basic room information -->
     <div class="studyroom-info">
         <p><strong>Building:</strong>
             <a href="{% url 'building-detail' room.building.pk %}">
@@ -49,7 +57,7 @@
         {% endif %}
     </div>
 
-    <!-- AVAILABLE FEATURES -->
+    <!-- available features of a room -->
     <div class="studyroom-features">
         <p><strong>Available Features</strong></p>
 
@@ -63,9 +71,12 @@
         </ul>
     </div>
 
+    <!-- Reviews Section -->
     <h2>Reviews</h2>
 
+    <!-- if there are reviews for a room -->
     {% if reviews %}
+        <!-- for each review show its details -->
         {% for review in reviews %}
             <div class="review-card">
 
@@ -83,6 +94,7 @@
 
                 <p class="review-date">{{ review.published|date:"F j, Y" }}</p>
 
+                <!-- if the review belongs to the logged in user show edit and delete buttons -->
                 {% if user == review.user %}
                     <a href="{% url 'update-review' review.pk %}" class="primary-button">Edit</a>
                     <a href="{% url 'delete-review' review.pk %}" class="primary-button">Delete</a>
@@ -90,10 +102,13 @@
 
             </div>
         {% endfor %}
+    
+    <!-- if there are no reviews for the room then display this message -->
     {% else %}
         <p>No reviews yet. Be the first to review!</p>
     {% endif %}
 
+    <!-- Button to write a review depending on whether the user is authenticated or not-->
     {% if user.is_authenticated %}
         <a href="{% url 'create-review' room.pk %}" class="primary-button">Write a Review</a>
     {% else %}

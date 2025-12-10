@@ -1,3 +1,10 @@
+<!-- 
+File: update_review_form.html
+Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+Description: This is the template for the update review form page of the terrier_study app.
+Allows users to edit their existing review for a specific study room.
+-->
+
 {% extends "terrier_study/base.html" %}
 {% load static %}
 
@@ -7,6 +14,7 @@
 
     <h2>Edit Your Review</h2>
 
+    <!-- a form to edit and post the review -->
     <form method="post">
         {% csrf_token %}
 
@@ -25,6 +33,7 @@
             {{ form.image_url }}
         </p>
 
+        <!-- display error messages if there are any (ratings_) -->
         {% if form.errors %}
             <div class="error-messages">
                 {% for field, errors in form.errors.items %}
@@ -35,13 +44,14 @@
             </div>
         {% endif %}
 
+        <!-- Submit Button -->
         <button type="submit" class="primary-button">Save Changes</button>
 
-        <!-- Cancel Link styled like a button -->
+        <!-- Cancel Link  -->
         <a href="{% url 'studyroom-detail' object.study_room.pk %}" class="primary-button">
             Cancel
         </a>
-        
+
     </form>
 
 </div>

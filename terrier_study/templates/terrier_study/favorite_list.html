@@ -1,6 +1,14 @@
+<!-- 
+File: favorite_list.html
+Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+Description: This is the template for displaying the list of favorite study rooms in the terrier_study app.
+-->
+
+<!-- if there are favorites then display them -->
 {% if favorites %}
     <div class="favorites-list">
 
+        <!-- for each favorite study room show its details and a remove button -->
         {% for fav in favorites %}
             <div class="favorite-card">
                 <a href="{% url 'studyroom-detail' fav.study_room.pk %}" class="favorite-link">
@@ -27,7 +35,7 @@
 
                 </a>
 
-                <!-- Remove button -->
+                <!-- form remove button -->
                 <form action="{% url 'remove-favorite' fav.pk %}" method="post" class="remove-fav-form">
                     {% csrf_token %}
                     <button type="submit" class="primary-button">Remove from Favorites</button>
@@ -36,7 +44,8 @@
         {% endfor %}
 
     </div>
-
+    
+<!-- if user has no favorites -->
 {% else %}
     <p>You have no favorite study rooms yet.</p>
 {% endif %}

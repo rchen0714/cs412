@@ -1,3 +1,7 @@
+# File: terrier_study/forms.py
+# Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+# Description: This file contains all the forms for the terrier_study application.
+
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User

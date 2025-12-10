@@ -1,4 +1,12 @@
+<!-- 
+File: filter_form.html
+Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+Description: This is the template for filtering study spots by features in the terrier_study app.
+-->
+
 <p><strong>Filter Study Spot by Features</strong></p>
+
+<!-- a form choosing the destination of the page after the filters are applied -->
 
 <form action="
     {% if form_action == 'home' %}
@@ -10,6 +18,7 @@
     class="filter-form"
 >
 
+    <!-- labels for the checkboxes to enable filtering -->
     <label>
         <input type="checkbox" name="on_campus" value="true"
                {% if request.GET.on_campus == "true" %}checked{% endif %}>

@@ -1,3 +1,9 @@
+<!-- 
+File: create_review_form.html
+Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+Description: This is the template for creating a new review in the terrier_study app.
+-->
+
 {% extends "terrier_study/base.html" %}
 {% load static %}
 
@@ -7,34 +13,38 @@
 
     <h2>Write a Review</h2>
 
+    #make a post request 
     <form method="post">
         {% csrf_token %}
 
+        <!-- these fields for the review form -->
         <p>
-            <label for="id_rating"><strong>Rating (1-5):</strong></label><br>
+            <label><strong>Rating (1-5):</strong></label><br>
             {{ form.rating }}
         </p>
 
         <p>
-            <label for="id_text"><strong>Your Review:</strong></label><br>
+            <label><strong>Your Review:</strong></label><br>
             {{ form.text }}
         </p>
 
         <p>
-            <label for="id_image_url"><strong>Image URL (optional):</strong></label><br>
+            <label><strong>Image URL (optional):</strong></label><br>
             {{ form.image_url }}
         </p>
 
+        <!-- if there are any errors (the rating) then throw an error message -->
         {% if form.errors %}
-            <div class="error-messages">
+            <div>
                 {% for field, errors in form.errors.items %}
                     {% for error in errors %}
-                        <p class="error-text">{{ error }}</p>
+                        <p>{{ error }}</p>
                     {% endfor %}
                 {% endfor %}
             </div>
         {% endif %}
 
+        <!-- submit button -->
         <button type="submit" class="primary-button">Submit Review</button>
         <a href="{% url 'studyroom-detail' room_id %}" class="primary-button">Cancel</a>
     </form>

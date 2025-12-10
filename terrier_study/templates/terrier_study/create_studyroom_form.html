@@ -1,3 +1,10 @@
+<!-- 
+File: create_studyroom_form.html
+Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+Description: This is the template for creating a new study room in the terrier_study app.
+-->
+
+
 {% extends "terrier_study/base.html" %}
 {% load static %}
 
@@ -8,6 +15,7 @@
     <h2>Create a New Study Room</h2>
     
 
+    <!-- check if the user is authenticated -->
     {% if not request.user.is_authenticated %}
         <p>Sorry, you must be logged in to access this feature.</p>
 
@@ -17,6 +25,7 @@
 
     {% else %}
 
+        <!-- form to create a new study room -->
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}

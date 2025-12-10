@@ -1,3 +1,10 @@
+<!-- 
+File: studyroom_list.html
+Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+Description: This is the template for the studyroom_list page of the terrier_study app.
+A list of all study rooms with filtering options.
+-->
+
 {% extends "terrier_study/base.html" %}
 {% load static %}
 
@@ -7,13 +14,15 @@
 
     <h2>All Study Rooms</h2>
 
-    <!-- FILTER FORM -->
+    <!-- Filtering form -->
     <div class="filter-section">
         {% include "terrier_study/filter_form.html" with form_action="studyroom-list" %}
     </div>
 
+    <!-- List of study rooms -->
     <div class="studyroom-list">
 
+        <!-- For each room in the list of study_rooms display a card with its details -->
         {% for room in rooms %}
             <a href="{% url 'studyroom-detail' room.pk %}" class="studyroom-card-link">
                 <div class="studyroom-card">
