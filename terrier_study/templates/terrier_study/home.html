@@ -39,7 +39,7 @@ function initMap() {
     // Pass current filter query parameters to the API
     const params = new URLSearchParams(window.location.search);
 
-    fetch("/terrier_study/api/buildings/?" + params.toString())
+    fetch("/rc071404//terrier_study/api/buildings/?" + params.toString())
         .then(response => response.json())
         .then(data => {
             const buildings = data.results ?? data;
