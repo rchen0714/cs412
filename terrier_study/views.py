@@ -361,7 +361,7 @@ def home(request):
         request,
         "terrier_study/home.html",
         {
-            "google_key": settings.GOOGLE_MAPS_KEY,
+            "google_key": settings.GOOGLE_MAPS_API_KEY,
             "buildings": buildings,
         }
     )
