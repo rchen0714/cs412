@@ -7,6 +7,7 @@ the dadjokes application.
 """
 
 
+from django.conf import settings
 from django.shortcuts import render
 
 # Create your views here.
@@ -64,6 +65,10 @@ class RandomJokePictureView(TemplateView):
         
         return context
     
+def home(request):
+    return render(request, "terrier_study/home.html", {
+        "google_key": settings.GOOGLE_MAPS_KEY,
+    })
 
 #----- API Views for JSON -----
 

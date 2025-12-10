@@ -1,3 +1,9 @@
+
+# File: terrier_study/views.py
+# Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+# Description: This is all the views for the terrierstudy application
+
+
 from django.shortcuts import render
 from importlib.resources import files
 from django.contrib.auth.forms import UserCreationForm 
@@ -7,6 +13,8 @@ from django.contrib.auth import login
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
+
+from cs412 import settings
 from .mixins import CheckLogin
 from .forms import *
 
@@ -21,25 +29,26 @@ from .serializer import *
 
 
 class BuildingListView(ListView):
-    """Show all buildings."""
+    """View that showsw all buildings."""
     model = Building
     template_name = "terrier_study/building_list.html"
     context_object_name = "buildings"
 
 class BuildingDetailView(DetailView):
-    """Show a single building and its study rooms."""
+    """DetailView that shows a single building and its study rooms."""
     model = Building
     template_name = "terrier_study/building_detail.html"
     context_object_name = "building"
 
     def get_context_data(self, **kwargs):
+        """add a study rooms context data"""
         context = super().get_context_data(**kwargs)
         building = self.object
-        context["rooms"] = StudyRoom.objects.filter(building=building)
+        context["rooms"] = building.study_rooms.all()
         return context
     
 class StudyRoomListView(ListView):
-    """List all rooms with optional filtering."""
+    """View that shows all study rooms with optional filtering."""
     model = StudyRoom
     template_name = "terrier_study/studyroom_list.html"
     context_object_name = "rooms"
@@ -47,16 +56,13 @@ class StudyRoomListView(ListView):
     def get_queryset(self):
         queryset = StudyRoom.objects.all()
 
+        # grab the FK building 
         building_id = self.request.GET.get("building")
         if building_id:
-            queryset = queryset.filter(building_id=building_id)
+            queryset = queryset.filter(building__id=building_id)
 
-        feature_filters = [
-            "on_campus", "id_required", "wifi",
-            "outlets", "windows", "whiteboard"
-        ]
-
-        for feature in feature_filters:
+        #filter the features by the model boolean inputs
+        for feature in ["on_campus", "id_required", "wifi", "outlets", "windows", "whiteboard"]:
             val = self.request.GET.get(feature)
             if val == "true":
                 queryset = queryset.filter(**{feature: True})
@@ -66,174 +72,325 @@ class StudyRoomListView(ListView):
         return queryset
 
     def get_context_data(self, **kwargs):
+        """return context data including buildings for dropdown"""
         context = super().get_context_data(**kwargs)
-        context["buildings"] = Building.objects.all()
+        context["buildings"] = Building.objects.all()  # needed for dropdown
+        return context
+
+class CreateStudyRoomView(CheckLogin, CreateView):
+    """Allows a logged-in user to create a new study room."""
+
+    model = StudyRoom
+    form_class = CreateStudyRoomForm
+    template_name = "terrier_study/create_studyroom_form.html"
+
+    def form_valid(self, form):
+        """Used to check whether a valid form is submitted."""
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        """Redirect to the detail page of the newly created study room."""
+        #grab the room id and do a reverse search of the primary key
+        room_id = self.object.pk
+        return reverse("studyroom-detail", kwargs={"pk": room_id})
+
+    def get_context_data(self, **kwargs):
+        """Add any needed context variables."""
+        context = super().get_context_data(**kwargs)
+        
         return context
     
 class StudyRoomDetailView(DetailView):
-    """Show one study room and its reviews."""
+    """DetailView that shows a single study room and its reviews."""
     model = StudyRoom
-    template_name = "terrier_study/studyroom_detail.html"
+    template_name = "terrier_study/studyroom.html"
     context_object_name = "room"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         room = self.object
+
+        #retrieve all the reviews for this specfic study room
         context["reviews"] = UserReview.objects.filter(study_room=room).order_by("-published")
+
+        # Check if the logged-in user has favorited this room
+        if self.request.user.is_authenticated:
+            # get the specific favorite object if it exists
+            fav = UserFavorite.objects.filter(
+                study_room=room,
+                user=self.request.user
+            ).first()
+            context["user_favorite_obj"] = fav
+            context["is_favorited"] = fav is not None
+        else:
+            context["user_favorite_obj"] = None
+            context["is_favorited"] = False
+
+        return context
+
+
+class CreateReviewView(CheckLogin, CreateView):
+    """Allows a logged-in user to create a review for a study room."""
+
+    model = UserReview
+    form_class = CreateReviewForm
+    template_name = "terrier_study/create_review_form.html"
+
+    def get_context_data(self, **kwargs):
+        """inherit any context data and add room_id"""
+        context = super().get_context_data(**kwargs)
+        context["room_id"] = self.kwargs["room_id"] 
+        return context
+
+    def form_valid(self, form):
+        """Called when a valid review form is submitted."""
+
+        room = get_object_or_404(StudyRoom, pk=self.kwargs["room_id"])
+        #instantiates a new review object
+        form.instance.study_room = room
+        #connects the review to the logged-in user
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        """Redirect to the detail page of the reviewed study room."""
+        room_id = self.kwargs["room_id"]
+        return reverse("studyroom-detail", kwargs={"pk": room_id})
+
+class UpdateReviewView(CheckLogin, UpdateView):
+    """Allows a logged-in user to update their own review."""
+
+    model = UserReview
+    form_class = UpdateReviewForm
+    template_name = "terrier_study/update_review_form.html"
+
+    def get_queryset(self):
+        """User may only edit their own reviews."""
+        return UserReview.objects.filter(user=self.request.user)
+
+    def get_success_url(self):
+        """if the review is successfully updated, redirect to the study room detail page"""
+        review = self.get_object()
+        return reverse("studyroom-detail", kwargs={"pk": review.study_room.pk})
+        
+class DeleteReviewView(CheckLogin, DeleteView):
+    """Allows a logged-in user to delete their own review."""
+
+    model = UserReview
+    template_name = "terrier_study/delete_review_confirm.html"
+    context_object_name = "review"
+
+    def get_queryset(self):
+        """User may only delete their own reviews."""
+        return UserReview.objects.filter(user=self.request.user) 
+
+    def get_success_url(self):
+        """if the review is successfully deleted, redirect to the study room detail page"""
+        review = self.get_object()
+        return reverse("studyroom-detail", kwargs={"pk": review.study_room.pk})
+        
+class AddFavoriteView(CheckLogin, TemplateView):
+    """
+    Allows a logged-in user to favorite a study room.
+    """
+
+    def dispatch(self, request, *args, **kwargs):
+
+        # Check authentication
+        if not request.user.is_authenticated:
+            return redirect("login")
+
+
+        # Retrieve the target study room
+        room_id = self.kwargs["room_id"]
+        room = get_object_or_404(StudyRoom, pk=room_id)
+
+        # Create favorite relationship if it doesn’t already exist
+        UserFavorite.objects.get_or_create(
+            study_room=room,
+            user=request.user
+        )
+
+
+        # Redirect back to the study room detail page
+        return redirect("studyroom-detail", pk=room.pk)
+    
+class RemoveFavoriteView(CheckLogin, TemplateView):
+    """
+    Allows a logged-in user to remove a favorite study room.
+    """
+
+    def dispatch(self, request, *args, **kwargs):
+
+        # Check authentication and redirect if not logged in
+        if not request.user.is_authenticated:
+            return redirect("login")
+
+        # Retrieve the favorite to be removed
+        favorite_id = self.kwargs["pk"]
+        favorite = get_object_or_404(UserFavorite, pk=favorite_id)
+
+        # Save room before deletion
+        room = favorite.study_room
+
+        # Only delete if belongs to logged-in user
+        if favorite.user == request.user:
+            favorite.delete()
+
+        # Redirect back to the room page (same as AddFavoriteView)
+        return redirect("studyroom-detail", pk=room.pk)
+    
+
+class FavoriteListView(CheckLogin, ListView):
+    """Show all favorites for the logged-in user."""
+
+    model = UserFavorite
+    template_name = "terrier_study/show_profile.html"
+    context_object_name = "favorites"
+
+    #get all the favorite objects for the logged-in user
+    def get_queryset(self):
+        return UserFavorite.objects.filter(
+            user=self.request.user
+        ).order_by("-date_saved")
+    
+class CreateProfileView(CreateView):
+    """Create a new TerrierStudy profile for a user."""
+
+    model = UserProfile
+    form_class = CreateProfileForm
+    template_name = "terrier_study/create_profile_form.html"
+
+    def get_context_data(self, **kwargs):
+        """Add Django's UserCreationForm to context."""
+        context = super().get_context_data(**kwargs)
+        context["user_form"] = UserCreationForm()
+        return context
+
+    def form_valid(self, form):
+        """Handle creation of the Django User + TerrierStudy profile."""
+
+        # Validate and create the Django User
+        user_form = UserCreationForm(self.request.POST)
+        if user_form.is_valid():
+            user = user_form.save()
+        else:
+            # Re-render with validation errors
+            return self.render_to_response(
+                self.get_context_data(form=form, user_form=user_form)
+            )
+
+        # Log the new user in
+        login(self.request, user, backend="django.contrib.auth.backends.ModelBackend")
+
+        # Attach the User to the TerrierStudy profile
+        form.instance.user = user
+
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        """Go to the new user's profile page after registration"""
+        return reverse("home")
+    
+
+class ProfileDetailView(CheckLogin, DetailView):
+    """Show the profile of the logged-in user."""
+    model = UserProfile
+    template_name = "terrier_study/show_profile.html"
+    context_object_name = "profile"
+
+    def get_object(self):
+        """Return the profile of the currently logged-in user."""
+        user = self.request.user
+
+        profile = UserProfile.objects.get(user=user)
+        return profile
+
+    def get_context_data(self, **kwargs):
+        """Add any necessary context data such as favorites and reviews."""
+        context = super().get_context_data(**kwargs)
+
+        #get the logged-in user
+        user = self.request.user
+
+        #get all favorites and reviews for this user
+        context["favorites"] = UserFavorite.objects.filter(user=user)
+        context["reviews"] = UserReview.objects.filter(user=user)
+
         return context
     
-# class CreateReviewView(CheckLogin, CreateView):
-#     """Create a review for a study room."""
-#     model = UserReview
-#     form_class = CreateReviewForm
-#     template_name = "study/create_review_form.html"
+class UpdateProfileView(CheckLogin, UpdateView):
+    """Edit an already existing TerrierStudy profile."""
 
-#     def form_valid(self, form):
-#         room_id = self.kwargs["room_id"]
-#         room = get_object_or_404(StudyRoom, pk=room_id)
+    model = UserProfile
+    form_class = UpdateProfileForm
+    template_name = "terrier_study/update_profile_form.html"
 
-#         form.instance.study_room = room
-#         form.instance.user_name = self.request.user.username
+    def get_object(self):
+        """Return the profile of the currently logged-in user."""
+        return UserProfile.objects.get(user=self.request.user)
 
-#         return super().form_valid(form)
+    def get_context_data(self, **kwargs):
+        """Add any necessary context data."""
+        context = super().get_context_data(**kwargs)
+        context["profile"] = self.get_object()
+        return context
 
-#     def get_success_url(self):
-#         return reverse(
-#             "studyroom_detail",
-#             kwargs={"pk": self.kwargs["room_id"]}
-#         )
+    def get_success_url(self):
+        """Go to the user's profile page after updating."""
+        return reverse("profile-detail")
 
-# class FavoriteListView(CheckLogin, ListView):
-#     """Show all favorites for logged-in user."""
-#     model = UserFavorite
-#     template_name = "study/favorite_list.html"
-#     context_object_name = "favorites"
-
-#     def get_queryset(self):
-#         username = self.request.user.username
-#         return UserFavorite.objects.filter(user_name=username).order_by("-date_saved")
     
-# class AddFavoriteView(CheckLogin, TemplateView):
-#     """Add a room to the user's favorites."""
-#     def dispatch(self, request, *args, **kwargs):
-#         room_id = self.kwargs["room_id"]
-#         room = get_object_or_404(StudyRoom, pk=room_id)
+def home(request):
+    """Home page view with building filtering."""
 
-#         UserFavorite.objects.get_or_create(
-#             user_name=request.user.username,
-#             study_room=room
-#         )
+    # Start with all study rooms
+    rooms = StudyRoom.objects.all()
 
-#         return redirect("studyroom_detail", pk=room_id)
-    
-# class RemoveFavoriteView(CheckLogin, TemplateView):
-#     """Remove a room from favorites."""
-#     def dispatch(self, request, *args, **kwargs):
-#         pk = self.kwargs["pk"]
-#         favorite = get_object_or_404(UserFavorite, pk=pk)
+    # Apply the boolean filters
+    for feature in ["on_campus", "id_required", "wifi", "outlets", "windows", "whiteboard"]:
+        val = request.GET.get(feature)
+        if val == "true":
+            rooms = rooms.filter(**{feature: True})
 
-#         # Only delete if the favorite belongs to the current user
-#         if favorite.user_name == request.user.username:
-#             favorite.delete()
+    # Get buildings that have at least one of the filtered rooms
+    buildings = Building.objects.filter(study_rooms__in=rooms).distinct()
 
-#         return redirect("favorite_list")
-    
-# class ProfileDetailView(CheckLogin, DetailView):
-#     """Show the logged-in user's profile."""
-#     model = UserProfile
-#     template_name = "study/profile_detail.html"
-#     context_object_name = "profile"
-
-#     def get_object(self):
-#         """Return only the logged-in user’s profile."""
-#         return UserProfile.objects.get(user_name=self.request.user.username)
-    
-# class UpdateProfileView(CheckLogin, UpdateView):
-#     """Edit user profile."""
-#     model = UserProfile
-#     form_class = UpdateProfileForm
-#     template_name = "study/update_profile_form.html"
-
-#     def get_object(self):
-#         return UserProfile.objects.get(user_name=self.request.user.username)
-
-#     def get_success_url(self):
-#         return reverse("profile_detail")
-    
-# class ProfileDetailView(CheckLogin, DetailView):
-#     model = UserProfile
-#     template_name = "study/profile_detail.html"
-#     context_object_name = "profile"
-
-#     def get_object(self):
-#         return UserProfile.objects.get(user_name=self.request.user.username)
-    
-# class UpdateProfileView(CheckLogin, UpdateView):
-#     model = UserProfile
-#     form_class = UpdateProfileForm
-#     template_name = "study/update_profile_form.html"
-
-#     def get_object(self):
-#         return UserProfile.objects.get(user_name=self.request.user.username)
-
-#     def get_success_url(self):
-#         return reverse("profile_detail")
-    
-# class CreateProfileView(CheckLogin, CreateView):
-#     model = UserProfile
-#     form_class = CreateProfileForm
-#     template_name = "study/create_profile_form.html"
-
-#     def form_valid(self, form):
-#         form.instance.user_name = self.request.user.username
-#         return super().form_valid(form)
-
-#     def get_success_url(self):
-#         return reverse("profile_detail")
-
-
-# class CreateAccountView(CreateView):
-#     """
-#     Step 1: Create a Django User
-#     Step 2: Create a linked UserProfile
-#     """
-#     template_name = "study/create_account_form.html"
-#     form_class = CreateProfileForm   # profile form only
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context["user_form"] = UserCreationForm()
-#         return context
-
-#     def post(self, request, *args, **kwargs):
-#         user_form = UserCreationForm(request.POST)
-#         profile_form = CreateProfileForm(request.POST)
-
-#         if user_form.is_valid() and profile_form.is_valid():
-#             # Create Django User
-#             user = user_form.save()
-
-#             # Log them in automatically
-#             login(request, user)
-
-#             # Create UserProfile linked to this User
-#             profile = profile_form.save(commit=False)
-#             profile.user = user
-#             profile.save()
-
-#             return redirect("profile_detail")
-
-#         return render(request, self.template_name, {
-#             "form": profile_form,
-#             "user_form": user_form
-#         })
+    # Render the home template with buildings and Google Maps key
+    return render(
+        request,
+        "terrier_study/home.html",
+        {
+            "google_key": settings.GOOGLE_MAPS_KEY,
+            "buildings": buildings,
+        }
+    )
 
 #----- API Views for JSON -----
 
 class BuildingListAPIView(generics.ListAPIView):
     """Returns all buildings (for map pins)."""
-    queryset = Building.objects.all()
+    
     serializer_class = BuildingSerializer
+    
+    def get_queryset(self):
+        """Optionally filter buildings by study room features."""
+        qs = Building.objects.all()
+
+        # Start with all study rooms
+        rooms = StudyRoom.objects.all()
+
+        # Apply the boolean filters
+        for feature in ["on_campus", "id_required", "wifi", "outlets", "windows", "whiteboard"]:
+            val = self.request.GET.get(feature)
+            if val == "true":
+                rooms = rooms.filter(**{feature: True})
+
+        # Filter buildings to those that have at least one of the filtered rooms
+        if rooms.exists():
+            qs = qs.filter(study_rooms__in=rooms).distinct()
+
+        return qs
 
 class BuildingDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     '''Retrieve, update, or delete a building.'''
@@ -269,7 +426,7 @@ class StudyRoomListAPIView(generics.ListAPIView):
         return queryset
     
 class StudyRoomDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
-    '''Retrieve, update, or delete a study room.'''
+    '''DetailView of a specific studyroom.'''
     queryset = StudyRoom.objects.all()
     serializer_class = StudyRoomSerializer
 
@@ -279,6 +436,7 @@ class UserReviewListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = UserReviewSerializer
 
     def get_queryset(self):
+        """Optionally filter reviews by study room ID."""
         queryset = UserReview.objects.all().order_by("-published")
         
         room_id = self.request.GET.get("room_id")
@@ -288,7 +446,7 @@ class UserReviewListCreateAPIView(generics.ListCreateAPIView):
         return queryset
     
 class UserReviewDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
-    '''Retrieve, update, or delete a user review.'''
+    '''DetailView of a specific user review.'''
     queryset = UserReview.objects.all()
     serializer_class = UserReviewSerializer
 
@@ -296,27 +454,14 @@ class UserFavoriteListCreateAPIView(generics.ListCreateAPIView):
     '''List user favorites (by username) or create one.'''
     serializer_class = UserFavoriteSerializer
 
-    def get_queryset(self):
-        username = self.request.GET.get("user_name")
-        if not username:
-            return UserFavorite.objects.none()
-        return UserFavorite.objects.filter(user_name=username).order_by("-date_saved")
-
 class UserFavoriteDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
-    '''Retrieve, update, or delete a favorite.'''
+    '''Detail view of a user favorite.'''
     queryset = UserFavorite.objects.all()
     serializer_class = UserFavoriteSerializer
 
 class UserProfileListCreateAPIView(generics.ListCreateAPIView):
     '''Create a profile or list profiles (optional filter by user_name).'''
     serializer_class = UserProfileSerializer
-
-    def get_queryset(self):
-        username = self.request.GET.get("user_name")
-        if username:
-            return UserProfile.objects.filter(user_name=username)
-        return UserProfile.objects.all()
-
 
 class UserProfileDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     '''Retrieve, update, or delete a user profile.'''

@@ -1,0 +1,32 @@
+<!-- 
+File: create_profile_form.html
+Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+Description: this template displays the form to create a new user profile
+-->
+
+{% extends "terrier_study/base.html" %}
+
+{% block content %}
+
+    <h1>Create Your TerrierStudy Account</h1>
+
+    <!-- form to verify user info and profile info -->
+    <form method="post" enctype="multipart/form-data" style="max-width:600px;">
+        {% csrf_token %}
+
+        <h3>Account Information</h3>
+        {{ user_form.as_p }}
+
+        <h3>Profile Information</h3>
+        {{ form.as_p }}
+
+        <button type="submit" class="primary-button">Create Account</button>
+    </form>
+
+    <!-- link to login if the user already has an account -->
+    <p>
+        Already have an account?
+        <a href="{% url 'login' %}">Log in here</a>.
+    </p>
+    
+{% endblock %}

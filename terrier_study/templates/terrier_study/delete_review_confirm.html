@@ -1,0 +1,24 @@
+{% extends "terrier_study/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="page-wrapper">
+
+    <h2>Delete Review</h2>
+    <p>Are you sure you want to delete your review for <strong>{{ review.study_room.name }}</strong>?</p>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <button type="submit" class="primary-button">Delete Review</button>
+
+        <a href="{% url 'studyroom-detail' review.study_room.pk %}" class="primary-button">
+            Cancel
+        </a>
+    </form>
+
+</div>
+
+{% endblock %}
+

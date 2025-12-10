@@ -1,0 +1,70 @@
+<!-- 
+File: base.html
+Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+Description: This is the base template for the terrier_study app. It includes the common header, navigation bar, and footer.
+-->
+
+{% load static %}
+
+<html>
+
+    <head>
+        <title>TerrierStudy</title>
+        <link rel="stylesheet" href="{% static 'styles_terrierstudy.css' %}">
+    </head>
+
+    <body>
+
+        <!-- Header -->
+        <header>
+            <h1 class="header-title">TerrierStudy</h1>
+        </header>
+
+        <!-- Navigation Bar -->
+
+        <nav>
+
+            <!-- public links for unauthorized users -->
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'building-list' %}">All Buildings</a></li>
+                <li><a href="{% url 'studyroom-list' %}">All Study Spots</a></li>
+                
+                <!-- private links hidden from unauthenticated users -->
+
+                {% if request.user.is_authenticated %}
+
+                    <li><a href="{% url 'create-studyroom' %}">Add Study Room</a></li>
+                    <li><a href="{% url 'profile-detail' %}">My Profile</a></li>
+
+                    <!-- display the logout if the user is login and authenticated  -->
+                    
+                    <li>
+                        <form action="{% url 'logout' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit">Log out</button>
+                        </form>
+                    </li>
+
+                {% else %}
+
+                    <!-- otherwise display a login and register button -->
+                    <li><a href="{% url 'login' %}">Log in</a></li>
+                    <li><a href="{% url 'register' %}">Register</a></li>
+
+                {% endif %}
+            </ul>
+
+        </nav>
+        
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+
+        <footer>
+            <p>&copy; TerrierStudy 2025. All rights reserved.</p>
+        </footer>
+    </body>
+</html>
+

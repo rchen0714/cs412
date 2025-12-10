@@ -1,3 +1,7 @@
+# File: terrier_study/serializer.py
+# Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+# Description: This is all the serializers for the terrierstudy application
+
 from rest_framework import serializers
 from .models import Building, StudyRoom, UserFavorite, UserReview, UserProfile
 

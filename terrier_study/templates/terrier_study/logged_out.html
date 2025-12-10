@@ -1,0 +1,12 @@
+{% extends "terrier_study/base.html" %}
+{% block content %}
+
+<h3>You are now logged out.</h3>
+
+<div class="buttons-row">
+    <a href="{% url 'login' %}" class="primary-button">Log in</a>
+    <a href="{% url 'home' %}" class="primary-button">Back to Home</a>
+</div>
+
+{% endblock %}
+

@@ -7,7 +7,6 @@ from .models import *
 class CreateProfileForm(forms.ModelForm):
     """
     Form for creating a TerrierStudy user profile.
-    Linked to the Django User via OneToOneField.
     """
     class Meta:
         model = UserProfile
@@ -15,7 +14,7 @@ class CreateProfileForm(forms.ModelForm):
 
 class UpdateProfileForm(forms.ModelForm):
     """
-    Edit an existing TerrierStudy profile.
+    Edit an existing profile.
     """
     class Meta:
         model = UserProfile
@@ -40,8 +39,7 @@ class UpdateReviewForm(forms.ModelForm):
 
 class CreateStudyRoomForm(forms.ModelForm):
     """
-    Admin-like form allowing creation of study rooms.
-    Useful if you want user-generated rooms.
+    Form allowing for the creation of a new study room.
     """
     class Meta:
         model = StudyRoom

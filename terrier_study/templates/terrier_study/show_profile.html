@@ -1,0 +1,39 @@
+{% extends "terrier_study/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="page-wrapper">
+
+    <h2>My Profile</h2>
+
+    <!-- User Account Information -->
+    <div id="profile-info">
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>BU ID:</strong> {{ profile.bu_id }}</p>
+        <p><strong>Year:</strong> {{ profile.year }}</p>
+        <p><strong>Major:</strong> {{ profile.major }}</p>
+    </div>
+
+    <!-- Buttons -->
+    <div class="button-row">
+
+        <a href="{% url 'update-profile' %}" class="primary-button">
+            Edit Profile
+        </a>
+
+        <form action="{% url 'logout' %}" method="post" class="logout-form" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="primary-button">Log Out</button>
+        </form>
+
+    </div>
+
+    <!-- Favorites Section -->
+    <h2>Your Favorite Study Rooms</h2>
+
+    {% include "terrier_study/favorite_list.html" %}
+
+</div>
+
+{% endblock %}

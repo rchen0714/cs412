@@ -1,0 +1,48 @@
+{% extends "terrier_study/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="page-wrapper">
+
+    <h2>All Study Rooms</h2>
+
+    <!-- FILTER FORM -->
+    <div class="filter-section">
+        {% include "terrier_study/filter_form.html" with form_action="studyroom-list" %}
+    </div>
+
+    <div class="studyroom-list">
+
+        {% for room in rooms %}
+            <a href="{% url 'studyroom-detail' room.pk %}" class="studyroom-card-link">
+                <div class="studyroom-card">
+
+                    <h3>{{ room.name }}</h3>
+
+                    <p><strong>Building:</strong> {{ room.building.name }}</p>
+
+                    {% if room.capacity %}
+                        <p><strong>Capacity:</strong> {{ room.capacity }}</p>
+                    {% endif %}
+
+                    <ul>
+                        <li>On Campus: {{ room.on_campus|yesno:"Yes,No" }}</li>
+                        <li>ID Required: {{ room.id_required|yesno:"Yes,No" }}</li>
+                        <li>Wifi: {{ room.wifi|yesno:"Yes,No" }}</li>
+                        <li>Outlets: {{ room.outlets|yesno:"Yes,No" }}</li>
+                        <li>Windows: {{ room.windows|yesno:"Yes,No" }}</li>
+                        <li>Whiteboard: {{ room.whiteboard|yesno:"Yes,No" }}</li>
+                    </ul>
+
+                </div>
+            </a>
+        {% empty %}
+            <p>No study rooms available that match your criteria.</p>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "terrier_study/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="page-wrapper">
+
+    <h2>Write a Review</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <p>
+            <label for="id_rating"><strong>Rating (1-5):</strong></label><br>
+            {{ form.rating }}
+        </p>
+
+        <p>
+            <label for="id_text"><strong>Your Review:</strong></label><br>
+            {{ form.text }}
+        </p>
+
+        <p>
+            <label for="id_image_url"><strong>Image URL (optional):</strong></label><br>
+            {{ form.image_url }}
+        </p>
+
+        {% if form.errors %}
+            <div class="error-messages">
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <p class="error-text">{{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <button type="submit" class="primary-button">Submit Review</button>
+        <a href="{% url 'studyroom-detail' room_id %}" class="primary-button">Cancel</a>
+    </form>
+
+</div>
+
+{% endblock %}

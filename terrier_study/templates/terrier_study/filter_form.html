@@ -1,0 +1,54 @@
+<p><strong>Filter Study Spot by Features</strong></p>
+
+<form action="
+    {% if form_action == 'home' %}
+        {% url 'home' %}
+    {% else %}
+        {% url form_action %}
+    {% endif %}" 
+    method="get" 
+    class="filter-form"
+>
+
+    <label>
+        <input type="checkbox" name="on_campus" value="true"
+               {% if request.GET.on_campus == "true" %}checked{% endif %}>
+        On-campus
+    </label>
+
+    <label>
+        <input type="checkbox" name="id_required" value="true"
+               {% if request.GET.id_required == "true" %}checked{% endif %}>
+        ID-required
+    </label>
+
+    <label>
+        <input type="checkbox" name="wifi" value="true"
+               {% if request.GET.wifi == "true" %}checked{% endif %}>
+        Wifi
+    </label>
+
+    <label>
+        <input type="checkbox" name="outlets" value="true"
+               {% if request.GET.outlets == "true" %}checked{% endif %}>
+        Outlets
+    </label>
+
+    <label>
+        <input type="checkbox" name="windows" value="true"
+               {% if request.GET.windows == "true" %}checked{% endif %}>
+        Windows
+    </label>
+
+    <label>
+        <input type="checkbox" name="whiteboard" value="true"
+               {% if request.GET.whiteboard == "true" %}checked{% endif %}>
+        Whiteboards
+    </label>
+
+    <br><br>
+
+    <button type="submit" class="primary-button">Apply Filters</button>
+
+</form>
+

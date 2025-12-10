@@ -1,0 +1,95 @@
+<!-- 
+File: building_detail.html
+Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+Description: Shows a specfic instance of a building on Boston University
+Campus that holds study locations
+-->
+
+{% extends "terrier_study/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="page-wrapper">
+
+    <!-- Building Header + Infromation -->
+    <h2>{{ building.name }}</h2>
+
+    {% if building.image_url %}
+        <img src="{{ building.image_url }}" alt="building of {{ building.name }}"class="building-detail-image">
+    {% endif %}
+
+    <p><strong>Address:</strong> {{ building.address }}</p>
+
+    {% if building.hours_open %}
+        <p><strong>Hours:</strong> {{ building.hours_open }}</p>
+    {% endif %}
+
+    {% if building.description %}
+        <p>{{ building.description }}</p>
+    {% endif %}
+
+
+
+    <!-- Section Displaying FK Study Rooms and their Features -->
+    <h3>Available Study Rooms in {{ building.name }}</h3>
+
+    <!-- if there are rooms available in this building  -->
+    {% if rooms %}
+        <div class="studyroom-list">
+
+            <!-- for each room list out the room and their features  -->
+            {% for room in rooms %}
+                <a href="{% url 'studyroom-detail' room.pk %}" class="studyroom-card-link">
+                    <div class="studyroom-card">
+
+                        <h4>{{ room.name }}</h4>
+
+                        <p><strong>Floor:</strong> {{ room.floor }}</p>
+                        <p><strong>Room Number:</strong> {{ room.room_number }}</p>
+
+                        {% if room.capacity %}
+                            <p><strong>Capacity:</strong> {{ room.capacity }}</p>
+                        {% endif %}
+
+                        {% if room.description %}
+                            <p>{{ room.description }}</p>
+                        {% endif %}
+
+                        <div class="feature-tags">
+                            {% if room.on_campus %}
+                                <span class="study-room-tag">On Campus</span>
+                            {% endif %}
+                            {% if room.id_required %}
+                                <span class="study-room-tag">ID Required</span>
+                            {% endif %}
+                            {% if room.wifi %}
+                                <span class="study-room-tag">Wifi</span>
+                            {% endif %}
+                            {% if room.outlets %}
+                                <span class="study-room-tag">Outlets</span>
+                            {% endif %}
+                            {% if room.windows %}
+                                <span class="study-room-tag">Windows</span>
+                            {% endif %}
+                            {% if room.whiteboard %}
+                                <span class="study-room-tag">Whiteboard</span>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                </a>
+            {% endfor %}
+
+        </div>
+
+    <!-- if there are no studyrooms available then we display this message  --> 
+    {% else %}
+        <p>No study rooms found in this building.</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}
+
+

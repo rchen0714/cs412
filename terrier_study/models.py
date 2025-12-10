@@ -1,3 +1,8 @@
+
+# File: terrier_study/models.py
+# Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+# Description: These are the models for the terrier_study application.
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -34,18 +39,7 @@ class StudyRoom(models.Model):
 
     def __str__(self):
         return f"Study room: {self.name} in {self.building.name} on floor {self.floor} room {self.room_number} (Capacity: {self.capacity})"
-
-
-class UserFavorite(models.Model):
-    study_room = models.ForeignKey(StudyRoom, on_delete=models.CASCADE, related_name='favorites')
-    user_name = models.CharField(max_length=100)
-    custom_roomname = models.CharField(max_length=100, blank=True)
-    notes = models.TextField(blank=True)
-    date_saved = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.user_name} favorited {self.study_room.name} at {self.date_saved} -- Notes: {self.notes}"
-    
+ 
 class UserFavorite(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites', null=True)
     study_room = models.ForeignKey(StudyRoom, on_delete=models.CASCADE, related_name='favorites')
@@ -71,11 +65,13 @@ class UserReview(models.Model):
 
     
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="terrier_profile", null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="terrier_profile")
 
     bu_id = models.CharField(max_length=20)
     year = models.CharField(max_length=20)
     major = models.CharField(max_length=100)
 
     def __str__(self):
-        return f"Profile: {self.user.username} ({self.major}, {self.year})"
+        if self.user:
+            return f"Profile: {self.user.username} ({self.major}, {self.year})"
+        return "Profile (no user assigned)"

@@ -1,0 +1,227 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+nav {
+    height: 100vh;
+    width: 15vw;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    padding-top: 5%;
+    padding-left: 2%;
+    border-right: 1px solid #d4d4d4;
+    background-color: #FFFFFF;
+    font-size: calc(3px + 1vw);
+}
+
+ul{
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+}
+
+nav li{
+    margin: 10% 0;
+}
+
+nav a{
+    text-decoration: none;
+    color: black;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+}
+
+body{
+    margin: 5% 0 0 18%;
+    font-family: 'Nunito Sans', sans-serif;
+    display: flex;
+    background-color: #FFFFFF;
+    flex-direction: column;
+    align-items: center;
+    gap: 3%;
+    font-size: calc(3px + 1vw);
+}
+
+main{
+    width: 75vw;
+    flex: 1;
+}
+
+footer{
+    padding: 3% 0;
+}
+
+
+.page-wrapper{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+h1{
+    font-size: calc(10px + 2vw);
+    margin-bottom: 2%;
+    color: #9E0505;
+    font-weight: 800;
+}
+
+h2{
+    font-size: calc(5px + 1.5vw);
+    color: black;
+    margin: 6% 0 2% 0;
+}
+
+h3{
+    font-size: calc(5px + 1vw);
+    color: black;
+    margin: 2% 0;
+
+}
+
+.subtitle{
+    font-size: calc(5px + 1vw);
+    color: black;
+    margin: 2% 0;
+    font-weight: 500;
+    text-align: center;
+}
+
+p{
+    font-size: calc(3px + 1vw);
+    color: black;
+    margin: 15px 0;
+}
+
+#map {
+    height: 450px;
+    width: 100%;
+    border-radius: 20px;
+}
+
+img{
+    border-radius: 20px;
+    max-width: 500px;
+    height: auto;
+}
+
+label{
+    padding-right: 15px; 
+}
+
+header{
+    border-bottom: 2px solid #d4d4d4;
+    text-align: center;
+    font-weight: 800;
+    width: 100%;
+}
+
+.building-card {
+    padding: 3%;
+    border: 1px solid #d4d4d4;
+    border-radius: 20px;
+    margin-bottom: 5%;
+    background-color: #fff;
+}
+
+.building-card:hover {
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.20);
+}
+
+.studyroom-card {
+    padding: 3%;
+    border: 1px solid #d4d4d4;
+    border-radius: 20px;
+    margin-bottom: 5%;
+    background-color: #FFFFFF;
+}
+
+.studyroom-card:hover {
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.20);
+}
+
+#profile-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 3%;
+    border: 1px solid #d4d4d4;
+    border-radius: 20px;
+    margin-bottom: 5%;
+    background-color: #fff;
+}
+
+.favorites-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.favorite-card {
+    flex: 1 1 calc(50% - 20px);
+    padding: 20px;
+    border: 1px solid #d4d4d4;
+    border-radius: 20px;
+    background-color: #fff;
+}
+
+.favorite-card:hover {
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.20);
+}
+
+.studyroom-features li{
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.studyroom-features{
+    border-bottom: 2px solid #d4d4d4;
+    padding-bottom: 3%;
+}
+
+.primary-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: calc(1px + 1vw);
+    font-weight: 600;
+    background-color: #ffffff;       
+    color: #000000;            
+    border: 0.5px solid #000000;      
+    border-radius: 20px;             
+    text-decoration: none;   
+    margin: 2% 0;  
+}
+
+.study-room-tag{
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: calc(1px + 1vw);
+    font-weight: 600;
+    background-color: #ffffff;       
+    color: #000000;            
+    border: 0.5px solid #000000;      
+    border-radius: 20px;             
+    text-decoration: none;   
+    margin: 2% 0;  
+}
+
+
+
+
+
+
+

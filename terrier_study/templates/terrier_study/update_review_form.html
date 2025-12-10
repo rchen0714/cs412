@@ -1,0 +1,49 @@
+{% extends "terrier_study/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="page-wrapper">
+
+    <h2>Edit Your Review</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <p>
+            <label><strong>Rating (1-5):</strong></label><br>
+            {{ form.rating }}
+        </p>
+
+        <p>
+            <label><strong>Your Review:</strong></label><br>
+            {{ form.text }}
+        </p>
+
+        <p>
+            <label><strong>Image URL:</strong></label><br>
+            {{ form.image_url }}
+        </p>
+
+        {% if form.errors %}
+            <div class="error-messages">
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <p class="error-text">{{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <button type="submit" class="primary-button">Save Changes</button>
+
+        <!-- Cancel Link styled like a button -->
+        <a href="{% url 'studyroom-detail' object.study_room.pk %}" class="primary-button">
+            Cancel
+        </a>
+        
+    </form>
+
+</div>
+
+{% endblock %}

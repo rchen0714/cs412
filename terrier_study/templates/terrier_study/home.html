@@ -1,0 +1,63 @@
+{% extends "terrier_study/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="page-wrapper">
+
+    <h3 class="subtitle"> 
+        Welcome to TerrierStudy!  A campus navigation app designed to help 
+        Boston University students easily discover and locate study 
+        spots across BU campus.
+    </h3>
+
+    <!-- Filter Form -->
+    <div class="filter-section">
+        {% include "terrier_study/filter_form.html" with form_action="home" %}
+    </div>
+
+
+    <!-- map -->
+    <div id="map"></div>
+
+</div>
+
+<!-- GOOGLE MAPS INIT SCRIPT -->
+<script async
+    src="https://maps.googleapis.com/maps/api/js?key={{ google_key }}&callback=initMap">
+</script>
+
+<script>
+function initMap() {
+    const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 14,
+        center: { lat: 42.3505, lng: -71.1054 }
+    });
+
+    // Pass current filter query parameters to the API
+    const params = new URLSearchParams(window.location.search);
+
+    fetch("/terrier_study/api/buildings/?" + params.toString())
+        .then(response => response.json())
+        .then(data => {
+            const buildings = data.results ?? data;
+
+            buildings.forEach(b => {
+                if (!b.latitude || !b.longitude) return;
+
+                const marker = new google.maps.Marker({
+                    position: { lat: b.latitude, lng: b.longitude },
+                    map: map,
+                    title: b.name
+                });
+
+                marker.addListener("click", () => {
+                    window.location.href = `/terrier_study/buildings/${b.id}/`;
+                });
+            });
+        })
+        .catch(err => console.error("Error loading buildings:", err));
+}
+</script>
+
+{% endblock %}

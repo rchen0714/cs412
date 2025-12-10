@@ -1,0 +1,43 @@
+{% if favorites %}
+    <div class="favorites-list">
+
+        {% for fav in favorites %}
+            <div class="favorite-card">
+                <a href="{% url 'studyroom-detail' fav.study_room.pk %}" class="favorite-link">
+
+                    <h3>
+                        {% if fav.custom_roomname %}
+                            {{ fav.custom_roomname }} ({{ fav.study_room.name }})
+                        {% else %}
+                            {{ fav.study_room.name }}
+                        {% endif %}
+                    </h3>
+
+                    <p>
+                        <strong>Building:</strong>
+                        {{ fav.study_room.building.name }}
+                    </p>
+
+                    <ul class="room-features">
+                        <li>Wifi: {{ fav.study_room.wifi|yesno:"Yes,No" }}</li>
+                        <li>Outlets: {{ fav.study_room.outlets|yesno:"Yes,No" }}</li>
+                        <li>Windows: {{ fav.study_room.windows|yesno:"Yes,No" }}</li>
+                        <li>ID Required: {{ fav.study_room.id_required|yesno:"Yes,No" }}</li>
+                    </ul>
+
+                </a>
+
+                <!-- Remove button -->
+                <form action="{% url 'remove-favorite' fav.pk %}" method="post" class="remove-fav-form">
+                    {% csrf_token %}
+                    <button type="submit" class="primary-button">Remove from Favorites</button>
+                </form>
+            </div>
+        {% endfor %}
+
+    </div>
+
+{% else %}
+    <p>You have no favorite study rooms yet.</p>
+{% endif %}
+

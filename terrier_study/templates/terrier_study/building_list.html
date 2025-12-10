@@ -1,0 +1,52 @@
+<!-- 
+File: building_list.html
+Author: Ruby Chen (rc071404@bu.edu), 7/14/2004
+Description: Shows a list of all buildings on Boston University
+Campus that hold study locations
+-->
+
+{% extends "terrier_study/base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="page-wrapper">
+
+    <h2>All Buildings</h2>
+
+
+    <!-- Building List -->
+    <div class="building-list">
+        
+        <!-- for every building list its information -->
+        {% for building in buildings %}
+            <a href="{% url 'building-detail' building.pk %}" class="building-card-link">
+                <div class="building-card">
+
+                    <h3>{{ building.name }}</h3>
+
+                    {% if building.address %}
+                        <p><strong>Address:</strong> {{ building.address }}</p>
+                    {% endif %}
+
+                    {% if building.description %}
+                        <p>{{ building.description|truncatewords:20 }}</p>
+                    {% endif %}
+
+                    {% if building.hours_open %}
+                        <p><strong>Hours:</strong> {{ building.hours_open }}</p>
+                    {% endif %}
+
+                </div>
+            </a>
+        
+        {% empty %}
+            <p>No buildings found.</p>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

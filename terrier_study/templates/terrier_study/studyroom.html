@@ -1,0 +1,105 @@
+{% extends "terrier_study/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="page-wrapper">
+
+    <!-- HEADER -->
+    <h2 class="studyroom-title">{{ room.name }}</h2>
+
+    <!-- FAVORITE BUTTON -->
+    <div class="favorite-button">
+        {% if is_favorited %}
+            <form action="{% url 'remove-favorite' user_favorite_obj.pk %}" method="post" class="favorite-form">
+                {% csrf_token %}
+                <button type="submit" class="primary-button">Remove from Favorites</button>
+            </form>
+        {% else %}
+            <form action="{% url 'add-favorite' room.pk %}" method="post" class="favorite-form">
+                {% csrf_token %}
+                <button type="submit" class="primary-button">Add to Favorites</button>
+            </form>
+        {% endif %}
+    </div>
+
+    {% if room.image_url %}
+        <img src="{{ room.image_url }}"
+             alt="Image of {{ room.name }}"
+             class="studyroom-image">
+    {% endif %}
+
+    <!-- BASIC INFO -->
+    <div class="studyroom-info">
+        <p><strong>Building:</strong>
+            <a href="{% url 'building-detail' room.building.pk %}">
+                {{ room.building.name }}
+            </a>
+        </p>
+
+        <p><strong>Floor:</strong> {{ room.floor }}</p>
+        <p><strong>Room Number:</strong> {{ room.room_number }}</p>
+
+        {% if room.capacity %}
+            <p><strong>Capacity:</strong> {{ room.capacity }}</p>
+        {% endif %}
+
+        {% if room.description %}
+            <p>{{ room.description }}</p>
+        {% endif %}
+    </div>
+
+    <!-- AVAILABLE FEATURES -->
+    <div class="studyroom-features">
+        <p><strong>Available Features</strong></p>
+
+         <ul>
+            <li>On Campus: {{ room.on_campus|yesno:"Yes,No" }}</li>
+            <li>ID Required: {{ room.id_required|yesno:"Yes,No" }}</li>
+            <li>Wifi: {{ room.wifi|yesno:"Yes,No" }}</li>
+            <li>Outlets: {{ room.outlets|yesno:"Yes,No" }}</li>
+            <li>Windows: {{ room.windows|yesno:"Yes,No" }}</li>
+            <li>Whiteboard: {{ room.whiteboard|yesno:"Yes,No" }}</li>
+        </ul>
+    </div>
+
+    <h2>Reviews</h2>
+
+    {% if reviews %}
+        {% for review in reviews %}
+            <div class="review-card">
+
+                <p>
+                    <strong>{{ review.user.username }}</strong> — {{ review.rating }}/5
+                </p>
+
+                {% if review.text %}
+                    <p>{{ review.text }}</p>
+                {% endif %}
+
+                {% if review.image_url %}
+                    <img src="{{ review.image_url }}" alt="Review image" class="review-image">
+                {% endif %}
+
+                <p class="review-date">{{ review.published|date:"F j, Y" }}</p>
+
+                {% if user == review.user %}
+                    <a href="{% url 'update-review' review.pk %}" class="primary-button">Edit</a>
+                    <a href="{% url 'delete-review' review.pk %}" class="primary-button">Delete</a>
+                {% endif %}
+
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No reviews yet. Be the first to review!</p>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+        <a href="{% url 'create-review' room.pk %}" class="primary-button">Write a Review</a>
+    {% else %}
+        <a href="{% url 'login' %}" class="primary-button">Log In to Write a Review</a>
+    {% endif %}
+
+</div>
+
+{% endblock %}
