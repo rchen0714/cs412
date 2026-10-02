@@ -47,9 +47,12 @@ function initMap() {
     // Pass current filter query parameters to the API
     const params = new URLSearchParams(window.location.search);
 
-    //Fetch filtered buildings from Django's API and regular 
-    //Fetch data from the API endpoint cmds
-    fetch("/rc071404/terrier_study/api/buildings/?" + params.toString())
+    // Reversed URL includes the /rc071404 script prefix on cs-webapps
+    // and stays under /terrier_study/ on PythonAnywhere and local dev.
+    const buildingsApiUrl = "{% url 'api-building-list' %}";
+    const buildingDetailBase = "{% url 'building-detail' pk=0 %}";
+
+    fetch(buildingsApiUrl + "?" + params.toString())
         .then(response => response.json())
         .then(data => {
             const buildings = data.results ?? data;
@@ -67,7 +70,7 @@ function initMap() {
 
                 // When clicking a marker, go to that building's detail page
                 marker.addListener("click", () => {
-                    window.location.href = `/rc071404/terrier_study/buildings/${b.id}/`;
+                    window.location.href = buildingDetailBase.replace("/0/", "/" + b.id + "/");
                 });
             });
         })

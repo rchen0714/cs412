@@ -11,6 +11,9 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
 
     path("", home, name="home"),
+    # Unique name so the site root can redirect here. Several other apps
+    # also register a URL named "home".
+    path("", home, name="terrier_study_home"),
     
     path("buildings/", BuildingListView.as_view(), name="building-list"),
     path("buildings/<int:pk>/", BuildingDetailView.as_view(), name="building-detail"),

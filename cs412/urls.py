@@ -22,9 +22,13 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+from django.views.generic import RedirectView
 
 
 urlpatterns = [
+    # PythonAnywhere serves the domain root. TerrierStudy stays at
+    # /terrier_study/ as well, which is the path used on cs-webapps.
+    path('', RedirectView.as_view(pattern_name='terrier_study_home', permanent=False)),
     path('admin/', admin.site.urls),
     path('hw/', include('hw.urls')),
     path('quotes/', include('quotes.urls')),

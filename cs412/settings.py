@@ -16,22 +16,78 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
-from dotenv import load_dotenv
+import socket
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Optional gitignored file for local secrets. PythonAnywhere sets the same
+# names in /var/www/rchen0714_pythonanywhere_com_wsgi.py. Variables already
+# in the environment win, because load_dotenv does not override them.
+try:
+    from dotenv import load_dotenv
+    load_dotenv(BASE_DIR / ".env")
+except ImportError:
+    pass
+
+
+def _env_bool(name, default):
+    """Read a boolean environment variable. Blank means "use default"."""
+    raw = os.environ.get(name)
+    if raw is None or raw.strip() == "":
+        return default
+    return raw.strip().lower() in {"1", "true", "yes", "on"}
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-1vqy1bf#motrnf4%6=@j(=4lx8j7-^3##$+s&#r+ntn)*eh5#v'
+# Local `runserver` stays in debug mode until DJANGO_DEBUG is set.
+# PythonAnywhere must set DJANGO_DEBUG=False.
+DEBUG = _env_bool("DJANGO_DEBUG", True)
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# The key previously hard-coded in this file was committed to a public
+# repository, so it is compromised and must not be used. Local development
+# gets a throwaway key. Production refuses to start until DJANGO_SECRET_KEY
+# is a new value supplied by the environment or a gitignored .env file.
+_LOCAL_DEV_SECRET_KEY = "django-insecure-local-dev-only-not-for-production"
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "").strip()
+if not SECRET_KEY:
+    if DEBUG:
+        SECRET_KEY = _LOCAL_DEV_SECRET_KEY
+    else:
+        from django.core.exceptions import ImproperlyConfigured
+        raise ImproperlyConfigured(
+            "Set DJANGO_SECRET_KEY to a newly generated secret when "
+            "DJANGO_DEBUG is off. Do not reuse the key that used to be "
+            "committed in settings.py."
+        )
 
-ALLOWED_HOSTS = ['cs-webapps.bu.edu', '127.0.0.1']
+# Ruby's free-tier site. Override PYTHONANYWHERE_HOST if the account changes.
+PYTHONANYWHERE_HOST = os.environ.get(
+    "PYTHONANYWHERE_HOST", "rchen0714.pythonanywhere.com"
+).strip()
+
+ALLOWED_HOSTS = [
+    "cs-webapps.bu.edu",
+    "127.0.0.1",
+    "localhost",
+]
+if PYTHONANYWHERE_HOST and PYTHONANYWHERE_HOST not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(PYTHONANYWHERE_HOST)
+
+# Comma-separated extras, for example a temporary preview hostname.
+for _host in os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(","):
+    _host = _host.strip()
+    if _host and _host not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(_host)
+
+# Django 4+ rejects HTTPS form posts unless the origin is listed here.
+CSRF_TRUSTED_ORIGINS = ["https://cs-webapps.bu.edu"]
+if PYTHONANYWHERE_HOST:
+    _origin = "https://" + PYTHONANYWHERE_HOST
+    if _origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(_origin)
 
 
 # Application definition
@@ -136,21 +192,37 @@ USE_TZ = True
 
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = 'static/' # note: no leading slash!
-
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
-MEDIA_URL= "media/"  # note: no leading slash!
 
-import socket
+# Leading slashes so {% static %} and uploaded files resolve to /static/ and
+# /media/ on local dev and on PythonAnywhere (domain root).
+STATIC_URL = "/static/"
+MEDIA_URL = "/media/"
+
+# BU's cs-webapps host mounts the project under /rc071404/. That prefix is
+# applied only on that machine. PythonAnywhere's hostname is not
+# cs-webapps.bu.edu, so https://rchen0714.pythonanywhere.com keeps /static/
+# and /media/.
 CS_DEPLOYMENT_HOSTNAME = 'cs-webapps.bu.edu'
 
 if socket.gethostname() == CS_DEPLOYMENT_HOSTNAME:
     STATIC_URL = '/rc071404/static/'
     MEDIA_URL = '/rc071404/media/'
+
+# Secure cookies when debug is off. PythonAnywhere already redirects HTTP to
+# HTTPS; setting SECURE_SSL_REDIRECT here causes a redirect loop, so leave it off.
+if not DEBUG:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_HSTS_SECONDS = 60 * 60 * 24 * 30
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_REFERRER_POLICY = "same-origin"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -164,7 +236,14 @@ REST_FRAMEWORK = {
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-GOOGLE_MAPS_API_KEY = "AIzaSyDUY-iSEw6qz519J3SDIz32BmR6WUDfFkU"
+# Browser-side Google Maps key. The committed value still works as a fallback
+# so local dev and cs-webapps keep the map. Set GOOGLE_MAPS_API_KEY in the
+# PythonAnywhere WSGI file after rotating the key (it is in the public repo)
+# and allow https://rchen0714.pythonanywhere.com/* as an HTTP referrer.
+GOOGLE_MAPS_API_KEY = os.environ.get(
+    "GOOGLE_MAPS_API_KEY",
+    "AIzaSyDUY-iSEw6qz519J3SDIz32BmR6WUDfFkU",
+)
 
 
 
