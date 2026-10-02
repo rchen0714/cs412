@@ -1,0 +1,12 @@
+# PythonAnywhere installs this with pip inside a virtualenv (not pipenv).
+# Versions match what this project imports: Django, Pillow (ImageField),
+# Django REST framework (terrier_study/serializer.py and dadjokes),
+# django-cors-headers, Plotly (marathon_analytics and voter_analytics),
+# and python-dotenv (cs412/settings.py).
+# Python 3.13, matching the Pipfile. Django 5.2 also runs on 3.12.
+Django==5.2.5
+pillow==11.3.0
+djangorestframework==3.18.1
+django-cors-headers==4.9.0
+plotly==7.1.0
+python-dotenv==1.2.4
